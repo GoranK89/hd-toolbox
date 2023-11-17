@@ -122,7 +122,8 @@ ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
   })
 
   // Create the links
-  createLinks(NEW_UPLOAD_PATH, newGameCodes)
+  const allGameCodes = Object.values(gameCodes).flat()
+  createLinks(NEW_UPLOAD_PATH, allGameCodes)
 })
 
 // send folder data to renderer
@@ -133,6 +134,28 @@ ipcMain.handle('uploadFolderContent', async () => {
     return folderData
   } catch (error) {
     console.error(`Failed to handle 'uploadFolderData':`, error)
+  }
+})
+
+ipcMain.on('deleteGameCodes', async (event, gameCodesToDelete) => {
+  try {
+    const data = await fs.promises.readFile(JSON_PATH, 'utf8')
+    let gameCodes = JSON.parse(data)
+
+    // Delete code from JSON
+    let [gameProvider] = gameCodesToDelete.split('_')
+    let index = gameCodes[gameProvider].indexOf(gameCodesToDelete)
+    gameCodes[gameProvider].splice(index, 1)
+
+    // Write the changed data to JSON
+    const newData = JSON.stringify(gameCodes, null, 2)
+    fs.writeFileSync(JSON_PATH, newData)
+
+    // Delete the folder
+    const folderPath = path.join(NEW_UPLOAD_PATH, gameCodesToDelete)
+    fs.rmSync(folderPath, { recursive: true, force: true })
+  } catch (error) {
+    console.error(`Failed to handle 'deleteGameCodes':`, error)
   }
 })
 

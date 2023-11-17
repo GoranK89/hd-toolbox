@@ -12,8 +12,8 @@ const GeneratedFolders = ({ storedGameCodes }) => {
     fetchData()
   }, [storedGameCodes])
 
-  const deleteHandler = async () => {
-    console.log('DELETE folder')
+  const deleteHandler = async (folderName) => {
+    window.api.deleteGameCodes(folderName)
   }
 
   return (
@@ -27,7 +27,7 @@ const GeneratedFolders = ({ storedGameCodes }) => {
               {item.iconExists ? 'Icons OK' : 'Check icons'}
             </p>
           </div>
-          <button className="btn-delete" onClick={deleteHandler}>
+          <button className="btn-delete" onClick={() => deleteHandler(item.folder)}>
             DELETE
           </button>
         </div>

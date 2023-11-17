@@ -6,6 +6,9 @@ const api = {
   storeGameCodes: (gameCodes) => {
     ipcRenderer.send('storeGameCodes', gameCodes)
   },
+  deleteGameCodes: (gameCodes) => {
+    ipcRenderer.send('deleteGameCodes', gameCodes)
+  },
   uploadFolderContent: () => {
     return ipcRenderer.invoke('uploadFolderContent')
   }
