@@ -1,7 +1,12 @@
-import { app, shell, BrowserWindow } from 'electron'
-import { join } from 'path'
+import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import path from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import fs from 'fs'
 import icon from '../../resources/icon.png?asset'
+import { BASE_PATH, NEW_UPLOAD_PATH, JSON_PATH } from './paths'
+import { createGameFolder } from './gameFolders'
+import { getFolderData } from './readFolderData'
+import createLinks from './generateIconLinks'
 
 function createWindow() {
   // Create the browser window.
@@ -12,7 +17,7 @@ function createWindow() {
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
+      preload: path.join(__dirname, '../preload/index.js'),
       sandbox: false
     }
   })
@@ -31,7 +36,7 @@ function createWindow() {
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+    mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'))
   }
 }
 
@@ -69,3 +74,69 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
+
+// store game codes and create folders and files
+ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
+  // Create the folder for new upload
+  try {
+    await fs.promises.access(BASE_PATH)
+  } catch (error) {
+    await fs.promises.mkdir(NEW_UPLOAD_PATH)
+    console.log('New upload folder created')
+  }
+
+  let gameCodes = {}
+
+  // Create JSON file if it doesn't exist
+  try {
+    await fs.promises.access(JSON_PATH)
+    const data = await fs.promises.readFile(JSON_PATH, 'utf8')
+    gameCodes = JSON.parse(data)
+  } catch (error) {
+    // If the file is not accessible, create it
+    await fs.promises.writeFile(JSON_PATH, JSON.stringify(gameCodes, null, 2))
+    console.log('JSON file created')
+  }
+
+  // loop over the new game codes
+  newGameCodes.forEach((newGameCode) => {
+    let [gameProvider] = newGameCode.split('_')
+
+    // If game provider is not in the object, add it
+    if (!gameCodes[gameProvider]) {
+      gameCodes[gameProvider] = []
+    }
+    // If game code is not in the array, add it or log duplicates
+    if (!gameCodes[gameProvider].includes(newGameCode)) {
+      gameCodes[gameProvider].push(newGameCode)
+    } else {
+      console.log(`Duplicate game code: ${newGameCode}`)
+    }
+
+    // Write the added game codes to JSON file
+    const data = JSON.stringify(gameCodes, null, 2)
+    fs.writeFileSync(JSON_PATH, data)
+
+    // Create the folders with JSON data
+    createGameFolder(NEW_UPLOAD_PATH, data)
+  })
+
+  // Create the links
+  createLinks(NEW_UPLOAD_PATH, newGameCodes)
+})
+
+// send folder data to renderer
+ipcMain.handle('uploadFolderContent', async () => {
+  try {
+    const folderData = getFolderData()
+    console.log('Folder data sent to renderer')
+    return folderData
+  } catch (error) {
+    console.error(`Failed to handle 'uploadFolderData':`, error)
+  }
+})
+
+// create a database of game providers (short name and full name) and link it to storing game codes
+// folders and links should be also deleted with a button
+// implement an overview of all created folders and links, which can be edited from inside the app (expandable box bellow game code - see links option)
+// connect to google sheets API to get game names and types

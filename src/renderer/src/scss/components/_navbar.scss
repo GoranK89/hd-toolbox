@@ -1,0 +1,23 @@
+.navbar {
+  display: flex;
+  justify-content: space-evenly;
+  font-size: 2rem;
+  letter-spacing: 1.4px;
+  background-color: #003366;
+  color: #f8f8f8;
+
+  &__item {
+    cursor: pointer;
+    padding: 1rem;
+    color: #f8f8f8;
+    transition: color 0.3s ease-in-out;
+
+    &:hover {
+      color: #007fff;
+    }
+
+    &--active {
+      color: #007fff;
+    }
+  }
+}
