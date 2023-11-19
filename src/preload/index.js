@@ -11,6 +11,12 @@ const api = {
   },
   uploadFolderContent: () => {
     return ipcRenderer.invoke('uploadFolderContent')
+  },
+  subscribeToJsonChanges: (callback) => {
+    ipcRenderer.on('jsonFileChanged', callback)
+  },
+  unsubscribeToJsonChanges: (callback) => {
+    ipcRenderer.removeListener('jsonFileChanged', callback)
   }
 }
 

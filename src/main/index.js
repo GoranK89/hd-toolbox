@@ -171,7 +171,20 @@ ipcMain.on('deleteGameCodes', async (event, gameCodesToDelete) => {
   }
 })
 
+// Watch for changes in the JSON file and send a message to the renderer
+if (fs.existsSync(JSON_PATH)) {
+  fs.watch(JSON_PATH, (eventType, filename) => {
+    if (filename && eventType === 'change') {
+      const windows = BrowserWindow.getAllWindows()
+      windows.forEach((win) => {
+        win.webContents.send('jsonFileChanged')
+      })
+    }
+  })
+} else {
+  console.log(`File ${JSON_PATH} does not exist`)
+}
+
 // create a database of game providers (short name and full name) and link it to storing game codes
-// folders and links should be also deleted with a button
 // implement an overview of all created folders and links, which can be edited from inside the app (expandable box bellow game code - see links option)
 // connect to google sheets API to get game names and types

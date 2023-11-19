@@ -11,11 +11,14 @@ function App() {
     setActive(state)
   }
 
+  // NOTE: the games component has mounting and unmounting issues, react router should solve that, currently this is a workaround
   return (
     <>
       <Navbar onSelect={setNavbarState} />
       {active === 'dashboard' && <Dashboard />}
-      {active === 'games' && <Games />}
+      <div style={{ display: active === 'games' ? 'block' : 'none' }}>
+        <Games />
+      </div>
     </>
   )
 }

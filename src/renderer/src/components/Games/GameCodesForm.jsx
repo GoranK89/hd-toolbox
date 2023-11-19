@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const GameCodesForm = ({ onGameCodesSubmit }) => {
+const GameCodesForm = () => {
   const [gameCodes, setGameCodes] = useState('')
 
   const handleSubmit = (e) => {
@@ -15,8 +15,6 @@ const GameCodesForm = ({ onGameCodesSubmit }) => {
         .map((code) => code.replace(/\s/g, ''))
         .filter((code) => code !== '')
 
-      // send codesArray to parent component
-      onGameCodesSubmit(codesArray)
       // store the cleaned up codes array
       window.api.storeGameCodes(codesArray)
 

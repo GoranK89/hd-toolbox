@@ -87,6 +87,7 @@ input[type=number]::-webkit-outer-spin-button {
 .games-grid .game-form__textarea {
   width: 100%;
   height: 50%;
+  font-family: "Roboto", sans-serif;
   resize: none;
   border: 1px solid #ccc;
   outline: none;
@@ -142,16 +143,35 @@ input[type=number]::-webkit-outer-spin-button {
   background-color: rgba(30, 144, 255, 0.1);
   border-radius: 1rem;
 }
+.games-grid .generated-folders__container-description {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
 .games-grid .generated-folders__container-description h2 {
   font-size: 2rem;
 }
-.games-grid .generated-folders__container-description .icons-ok {
-  background-color: #32cd32;
-  color: #ffffff;
-}
+.games-grid .generated-folders__container-description .icons-ok,
 .games-grid .generated-folders__container-description .icons-check {
+  position: relative;
+  padding-left: 2.4rem;
+}
+.games-grid .generated-folders__container-description .icons-ok::after,
+.games-grid .generated-folders__container-description .icons-check::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+.games-grid .generated-folders__container-description .icons-ok::after {
+  background-color: #32cd32;
+}
+.games-grid .generated-folders__container-description .icons-check::after {
   background-color: #ffcc00;
-  color: #000000;
 }
 .games-grid .generated-folders__container .btn-delete {
   background-color: #b22222;

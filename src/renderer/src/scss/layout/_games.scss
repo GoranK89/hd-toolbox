@@ -14,6 +14,7 @@
     &__textarea {
       width: 100%;
       height: 50%;
+      font-family: 'Roboto', sans-serif;
       resize: none;
       border: 1px solid #ccc;
       outline: none;
@@ -79,23 +80,42 @@
       border-radius: 1rem;
 
       &-description {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+
         h2 {
           font-size: 2rem;
         }
 
-        .icons-ok {
-          background-color: #32cd32;
-          color: #ffffff;
+        .icons-ok,
+        .icons-check {
+          position: relative;
+          padding-left: 2.4rem; // Adjust as needed
+
+          &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 2rem; // Adjust as needed
+            height: 2rem; // Should be equal to width
+            border-radius: 50%; // Makes the element a circle
+            transform: translateY(-50%); // Centers the circle vertically
+          }
         }
 
-        .icons-check {
-          background-color: #ffcc00;
-          color: #000000;
+        .icons-ok::after {
+          background-color: $color-green;
+        }
+
+        .icons-check::after {
+          background-color: $color-yellow;
         }
       }
 
       .btn-delete {
-        background-color: #b22222;
+        background-color: $color-red;
         color: #ffffff;
         border: none;
         outline: none;
@@ -104,7 +124,7 @@
         cursor: pointer;
 
         &:hover {
-          background-color: #ff0000;
+          background-color: $color-dark-red;
         }
       }
     }
