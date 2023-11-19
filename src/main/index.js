@@ -122,7 +122,9 @@ ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
   })
 
   // Create the links
-  const allGameCodes = Object.values(gameCodes).flat()
+  const json = await fs.promises.readFile(JSON_PATH, 'utf8')
+  const currentGameCodes = JSON.parse(json)
+  const allGameCodes = Object.values(currentGameCodes).flat()
   createLinks(NEW_UPLOAD_PATH, allGameCodes)
 })
 
@@ -130,7 +132,6 @@ ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
 ipcMain.handle('uploadFolderContent', async () => {
   try {
     const folderData = getFolderData()
-    console.log('Folder data sent to renderer')
     return folderData
   } catch (error) {
     console.error(`Failed to handle 'uploadFolderData':`, error)
@@ -142,10 +143,21 @@ ipcMain.on('deleteGameCodes', async (event, gameCodesToDelete) => {
     const data = await fs.promises.readFile(JSON_PATH, 'utf8')
     let gameCodes = JSON.parse(data)
 
-    // Delete code from JSON
-    let [gameProvider] = gameCodesToDelete.split('_')
-    let index = gameCodes[gameProvider].indexOf(gameCodesToDelete)
-    gameCodes[gameProvider].splice(index, 1)
+    let [gameProvider, ...gameCode] = gameCodesToDelete.split('_')
+    let lastTwoChars = parseInt(gameCode[gameCode.length - 1].slice(-2), 10)
+    let pureGameCode = gameCode.join('_')
+
+    // Check if the last two characters are a number
+    if (!isNaN(lastTwoChars)) {
+      pureGameCode = gameCode.slice(0, -1).join('_')
+    }
+
+    // Filter all game codes by the pure game code
+    gameCodes[gameProvider] = gameCodes[gameProvider].filter((code) => {
+      let [codeProvider, ...codeParts] = code.split('_')
+      let codePrefix = codeParts.join('_')
+      return !codePrefix.startsWith(pureGameCode)
+    })
 
     // Write the changed data to JSON
     const newData = JSON.stringify(gameCodes, null, 2)
