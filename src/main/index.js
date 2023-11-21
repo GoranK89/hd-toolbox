@@ -7,6 +7,7 @@ import { BASE_PATH, NEW_UPLOAD_PATH, JSON_PATH } from './paths'
 import { createGameFolder } from './gameFolders'
 import { getFolderData } from './readFolderData'
 import createLinks from './generateIconLinks'
+import deleteGameCodes from './deleteGameCodes'
 
 function createWindow() {
   // Create the browser window.
@@ -98,6 +99,7 @@ ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
     console.log('JSON file created')
   }
 
+  // TODO: ACCOUNT FOR THE SPECIAL GAME PROVIDERS: use the js file from them
   // loop over the new game codes
   newGameCodes.forEach((newGameCode) => {
     let [gameProvider] = newGameCode.split('_')
@@ -138,34 +140,10 @@ ipcMain.handle('uploadFolderContent', async () => {
   }
 })
 
+// delete game codes and folders
 ipcMain.on('deleteGameCodes', async (event, gameCodesToDelete) => {
   try {
-    const data = await fs.promises.readFile(JSON_PATH, 'utf8')
-    let gameCodes = JSON.parse(data)
-
-    let [gameProvider, ...gameCode] = gameCodesToDelete.split('_')
-    let lastTwoChars = parseInt(gameCode[gameCode.length - 1].slice(-2), 10)
-    let pureGameCode = gameCode.join('_')
-
-    // Check if the last two characters are a number
-    if (!isNaN(lastTwoChars)) {
-      pureGameCode = gameCode.slice(0, -1).join('_')
-    }
-
-    // Filter all game codes by the pure game code
-    gameCodes[gameProvider] = gameCodes[gameProvider].filter((code) => {
-      let [codeProvider, ...codeParts] = code.split('_')
-      let codePrefix = codeParts.join('_')
-      return !codePrefix.startsWith(pureGameCode)
-    })
-
-    // Write the changed data to JSON
-    const newData = JSON.stringify(gameCodes, null, 2)
-    fs.writeFileSync(JSON_PATH, newData)
-
-    // Delete the folder
-    const folderPath = path.join(NEW_UPLOAD_PATH, gameCodesToDelete)
-    fs.rmSync(folderPath, { recursive: true, force: true })
+    await deleteGameCodes(gameCodesToDelete)
   } catch (error) {
     console.error(`Failed to handle 'deleteGameCodes':`, error)
   }

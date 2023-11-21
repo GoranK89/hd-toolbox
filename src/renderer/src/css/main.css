@@ -75,6 +75,11 @@ input[type=number]::-webkit-outer-spin-button {
   padding: 2rem;
   display: flex;
   gap: 5rem;
+  height: 100vh;
+  background-image: url("../../../src/assets/backgroundMuted.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 .games-grid .game-form {
   display: flex;
@@ -88,29 +93,41 @@ input[type=number]::-webkit-outer-spin-button {
   width: 100%;
   height: 50%;
   font-family: "Roboto", sans-serif;
+  font-weight: 600;
   resize: none;
-  border: 1px solid #ccc;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: #312d4e;
   outline: none;
   font-size: 1.6rem;
   padding: 1rem;
   margin-bottom: 1rem;
   border-radius: 5px;
+  background-color: rgba(132, 159, 188, 0.4);
+  backdrop-filter: blur(3px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.games-grid .game-form__textarea::placeholder {
+  color: #312d4e;
+  font-weight: 400;
+}
+.games-grid .game-form__textarea:focus {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 .games-grid .game-form__submit-button {
+  cursor: pointer;
   width: 100%;
   height: 3rem;
   border: none;
   outline: none;
-  background-color: #367588;
+  background-color: #312d4e;
   color: #f8f8f8;
   transition: background-color 0.3s ease-in-out;
   font-size: 1.6rem;
   font-weight: 600;
-  cursor: pointer;
   border-radius: 5px;
 }
 .games-grid .game-form__submit-button:hover {
-  background-color: #1e90ff;
+  background-color: #64b5f6;
 }
 .games-grid .generated-folders {
   display: flex;
@@ -135,21 +152,49 @@ input[type=number]::-webkit-outer-spin-button {
   background: #555;
 }
 .games-grid .generated-folders__container {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: #312d4e;
   padding: 1rem;
   gap: 1rem;
-  background-color: rgba(30, 144, 255, 0.1);
   border-radius: 1rem;
+  background-color: rgba(244, 243, 231, 0.4);
+  backdrop-filter: blur(3px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 .games-grid .generated-folders__container-description {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
 }
-.games-grid .generated-folders__container-description h2 {
+.games-grid .generated-folders__container-description span {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.games-grid .generated-folders__container-description span h2 {
   font-size: 2rem;
+}
+.games-grid .generated-folders__container-description span a {
+  padding: 1px 5px;
+  border-radius: 5px;
+  background-color: #64b5f6;
+  color: #f8f8f8;
+}
+.games-grid .generated-folders__container-description span a:hover {
+  background-color: #312d4e;
+}
+.games-grid .generated-folders__container-description .modal {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: black;
+  color: #fff;
+  z-index: 99;
 }
 .games-grid .generated-folders__container-description .icons-ok,
 .games-grid .generated-folders__container-description .icons-check {
@@ -168,20 +213,20 @@ input[type=number]::-webkit-outer-spin-button {
   transform: translateY(-50%);
 }
 .games-grid .generated-folders__container-description .icons-ok::after {
-  background-color: #32cd32;
+  background-color: #6c9575;
 }
 .games-grid .generated-folders__container-description .icons-check::after {
-  background-color: #ffcc00;
+  background-color: #fbc02d;
 }
 .games-grid .generated-folders__container .btn-delete {
-  background-color: #b22222;
+  background-color: #e57373;
   color: #ffffff;
   border: none;
   outline: none;
-  padding: 0.5rem;
+  padding: 0.6rem;
   border-radius: 5px;
   cursor: pointer;
 }
 .games-grid .generated-folders__container .btn-delete:hover {
-  background-color: #ff0000;
+  background-color: rgba(229, 115, 115, 0.5568627451);
 }
