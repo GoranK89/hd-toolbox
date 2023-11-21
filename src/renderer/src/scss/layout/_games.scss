@@ -117,7 +117,10 @@
           }
 
           a {
-            padding: 1px 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4px;
             border-radius: 5px;
             background-color: $color-light-blue;
             color: $dirtyWhite;
@@ -134,9 +137,13 @@
           right: 0;
           bottom: 0;
           left: 0;
-          background-color: black;
           color: #fff;
           z-index: 99;
+          padding: 1rem;
+          border-radius: 1rem;
+
+          background-color: rgba(49, 45, 78, 0.9);
+          backdrop-filter: blur(15px);
         }
 
         .icons-ok,
@@ -170,7 +177,7 @@
         color: #ffffff;
         border: none;
         outline: none;
-        padding: 0.6rem;
+        padding: 0.8rem;
         border-radius: 5px;
         cursor: pointer;
 

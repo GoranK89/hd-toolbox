@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { FaTrash, FaExternalLinkAlt } from 'react-icons/fa'
 
 const GeneratedFolders = () => {
   const [folderData, setFolderData] = useState([])
@@ -49,7 +50,7 @@ const GeneratedFolders = () => {
             <span>
               <h2>{item.folder}</h2>
               <a href="#" onClick={() => associatedLinksHandler(index)}>
-                SL
+                <FaExternalLinkAlt />
               </a>
               {openModalIndex === index && (
                 <div className="modal">
@@ -64,7 +65,7 @@ const GeneratedFolders = () => {
             </p>
           </div>
           <button className="btn-delete" onClick={() => deleteHandler(item.folder)}>
-            DELETE
+            <FaTrash />
           </button>
         </div>
       ))}
