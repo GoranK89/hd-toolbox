@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { FaTrash, FaExternalLinkAlt } from 'react-icons/fa'
+import { FaTrash, FaExternalLinkAlt, FaTimes } from 'react-icons/fa'
 
 const GeneratedFolders = () => {
   const [folderData, setFolderData] = useState([])
@@ -54,8 +54,12 @@ const GeneratedFolders = () => {
               </a>
               {openModalIndex === index && (
                 <div className="modal">
-                  <button onClick={closeModal}>Close</button>
-                  <div>Modal content goes here</div>
+                  <div className="modal__title">
+                    <p>Links & Symlinks:</p>
+                    <button onClick={closeModal}>
+                      <FaTimes />
+                    </button>
+                  </div>
                 </div>
               )}
             </span>

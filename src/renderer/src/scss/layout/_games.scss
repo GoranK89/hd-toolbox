@@ -144,6 +144,17 @@
 
           background-color: rgba(49, 45, 78, 0.9);
           backdrop-filter: blur(15px);
+
+          &__title {
+            display: flex;
+            justify-content: space-between;
+
+            button {
+              display: flex;
+              padding: 3px;
+              font-size: 1.4rem;
+            }
+          }
         }
 
         .icons-ok,

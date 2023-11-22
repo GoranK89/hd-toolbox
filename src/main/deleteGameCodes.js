@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { NEW_UPLOAD_PATH, JSON_PATH } from './paths'
+import specialGameProviders from './specialGameProviders'
 
 // TODO: delete the game links and symlinks too
 const deleteGameCodes = async (gameCodesToDelete) => {
@@ -11,6 +12,15 @@ const deleteGameCodes = async (gameCodesToDelete) => {
     let [gameProvider, ...gameCode] = gameCodesToDelete.split('_')
     let lastTwoChars = parseInt(gameCode[gameCode.length - 1].slice(-2), 10)
     let pureGameCode = gameCode.join('_')
+
+    if (specialGameProviders.includes(gameProvider)) {
+      const gameProviderLastLetter = gameProvider[gameProvider.length - 1]
+      if (gameProviderLastLetter === 'M') {
+        gameProvider = gameProvider.slice(0, -1)
+      } else if (gameProvider === 'MGSD') {
+        gameProvider = 'MGS'
+      }
+    }
 
     // Check if the last two characters are a number
     if (!isNaN(lastTwoChars)) {

@@ -1,13 +1,14 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import path from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import path from 'path'
 import fs from 'fs'
-import icon from '../../resources/icon.png?asset'
 import { BASE_PATH, NEW_UPLOAD_PATH, JSON_PATH } from './paths'
 import { createGameFolder } from './gameFolders'
 import { getFolderData } from './readFolderData'
 import createLinks from './generateIconLinks'
 import deleteGameCodes from './deleteGameCodes'
+import specialGameProviders from './specialGameProviders'
+import icon from '../../resources/icon.png?asset'
 
 function createWindow() {
   // Create the browser window.
@@ -103,6 +104,15 @@ ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
   // loop over the new game codes
   newGameCodes.forEach((newGameCode) => {
     let [gameProvider] = newGameCode.split('_')
+
+    if (specialGameProviders.includes(gameProvider)) {
+      const gameProviderLastLetter = gameProvider[gameProvider.length - 1]
+      if (gameProviderLastLetter === 'M') {
+        gameProvider = gameProvider.slice(0, -1)
+      } else if (gameProvider === 'MGSD') {
+        gameProvider = 'MGS'
+      }
+    }
 
     // If game provider is not in the object, add it
     if (!gameCodes[gameProvider]) {

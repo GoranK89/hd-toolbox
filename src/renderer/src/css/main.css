@@ -202,6 +202,15 @@ input[type=number]::-webkit-outer-spin-button {
   background-color: rgba(49, 45, 78, 0.9);
   backdrop-filter: blur(15px);
 }
+.games-grid .generated-folders__container-description .modal__title {
+  display: flex;
+  justify-content: space-between;
+}
+.games-grid .generated-folders__container-description .modal__title button {
+  display: flex;
+  padding: 3px;
+  font-size: 1.4rem;
+}
 .games-grid .generated-folders__container-description .icons-ok,
 .games-grid .generated-folders__container-description .icons-check {
   position: relative;
