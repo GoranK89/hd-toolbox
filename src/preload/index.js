@@ -12,6 +12,9 @@ const api = {
   uploadFolderContent: () => {
     return ipcRenderer.invoke('uploadFolderContent')
   },
+  readSymLinks: (gameCode) => {
+    return ipcRenderer.invoke('readSymLinks', gameCode)
+  },
   subscribeToJsonChanges: (callback) => {
     ipcRenderer.on('jsonFileChanged', callback)
   },

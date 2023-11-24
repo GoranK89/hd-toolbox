@@ -3,6 +3,7 @@ import { FaTrash, FaExternalLinkAlt, FaTimes } from 'react-icons/fa'
 
 const GeneratedFolders = () => {
   const [folderData, setFolderData] = useState([])
+  const [symlinkData, setSymlinkData] = useState([])
   const [openModalIndex, setOpenModalIndex] = useState(null)
 
   useEffect(() => {
@@ -38,8 +39,10 @@ const GeneratedFolders = () => {
     setOpenModalIndex(null)
   }
 
-  const associatedLinksHandler = (index) => {
+  const associatedLinksHandler = async (index, folderName) => {
     openModal(index)
+    const data = await window.api.readSymLinks(folderName)
+    setSymlinkData(data)
   }
 
   return (
@@ -49,17 +52,24 @@ const GeneratedFolders = () => {
           <div className="generated-folders__container-description">
             <span>
               <h2>{item.folder}</h2>
-              <a href="#" onClick={() => associatedLinksHandler(index)}>
+              <a href="#" onClick={() => associatedLinksHandler(index, item.folder)}>
                 <FaExternalLinkAlt />
               </a>
               {openModalIndex === index && (
                 <div className="modal">
                   <div className="modal__title">
-                    <p>Links & Symlinks:</p>
+                    <h4>Links & Symlinks:</h4>
                     <button onClick={closeModal}>
                       <FaTimes />
                     </button>
                   </div>
+                  <ul>
+                    {symlinkData.map((item, index) => (
+                      <li key={index}>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
             </span>

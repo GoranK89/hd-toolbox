@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { NEW_UPLOAD_PATH, JSON_PATH } from './paths'
 import specialGameProviders from './specialGameProviders'
+import { readSymlinks } from './readFolderData'
 
 // TODO: delete the game links and symlinks too
 const deleteGameCodes = async (gameCodesToDelete) => {
@@ -37,6 +38,16 @@ const deleteGameCodes = async (gameCodesToDelete) => {
     // Write the changed data to JSON
     const newData = JSON.stringify(gameCodes, null, 2)
     fs.writeFileSync(JSON_PATH, newData)
+
+    // Delete links
+    const linksPath = path.join(NEW_UPLOAD_PATH, 'icons.txt')
+    const linksForDeleting = await readSymlinks(gameCodesToDelete)
+    const linksToKeep = fs
+      .readFileSync(linksPath, 'utf8')
+      .split('\n')
+      .filter((link) => Boolean(link) && !linksForDeleting.includes(link))
+
+    fs.writeFileSync(linksPath, linksToKeep.join('\n'))
 
     // Delete the folder
     const folderPath = path.join(NEW_UPLOAD_PATH, gameCodesToDelete)

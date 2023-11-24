@@ -1,8 +1,8 @@
 .games-grid {
+  height: 92vh;
   padding: 2rem;
   display: flex;
   gap: 5rem;
-  height: 100vh;
   background-image: url('../../../src/assets/backgroundMuted.png');
   background-position: center;
   background-repeat: no-repeat;
@@ -155,6 +155,9 @@
               font-size: 1.4rem;
             }
           }
+
+          overflow-y: auto;
+          overflow-x: auto;
         }
 
         .icons-ok,

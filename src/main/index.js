@@ -4,9 +4,9 @@ import path from 'path'
 import fs from 'fs'
 import { BASE_PATH, NEW_UPLOAD_PATH, JSON_PATH } from './paths'
 import { createGameFolder } from './gameFolders'
-import { getFolderData } from './readFolderData'
+import { getFolderData, readSymlinks } from './readFolderData'
 import createLinks from './generateIconLinks'
-import deleteGameCodes from './deleteGameCodes'
+import deleteGameCodes from './deleteFunctionality'
 import specialGameProviders from './specialGameProviders'
 import icon from '../../resources/icon.png?asset'
 
@@ -77,6 +77,17 @@ app.on('window-all-closed', () => {
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 
+// Helper functions
+async function readJSONFile(path) {
+  const data = await fs.promises.readFile(path, 'utf8')
+  return JSON.parse(data)
+}
+
+async function writeJSONFile(path, data) {
+  const jsonData = JSON.stringify(data, null, 2)
+  await fs.promises.writeFile(path, jsonData)
+}
+
 // store game codes and create folders and files
 ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
   // Create the folder for new upload
@@ -84,24 +95,16 @@ ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
     await fs.promises.access(BASE_PATH)
   } catch (error) {
     await fs.promises.mkdir(NEW_UPLOAD_PATH)
-    console.log('New upload folder created')
   }
 
   let gameCodes = {}
 
-  // Create JSON file if it doesn't exist
   try {
-    await fs.promises.access(JSON_PATH)
-    const data = await fs.promises.readFile(JSON_PATH, 'utf8')
-    gameCodes = JSON.parse(data)
+    gameCodes = await readJSONFile(JSON_PATH)
   } catch (error) {
-    // If the file is not accessible, create it
-    await fs.promises.writeFile(JSON_PATH, JSON.stringify(gameCodes, null, 2))
-    console.log('JSON file created')
+    await writeJSONFile(JSON_PATH, gameCodes)
   }
 
-  // TODO: ACCOUNT FOR THE SPECIAL GAME PROVIDERS: use the js file from them
-  // loop over the new game codes
   newGameCodes.forEach((newGameCode) => {
     let [gameProvider] = newGameCode.split('_')
 
@@ -159,7 +162,16 @@ ipcMain.on('deleteGameCodes', async (event, gameCodesToDelete) => {
   }
 })
 
+ipcMain.handle('readSymLinks', async (event, gameCode) => {
+  try {
+    return readSymlinks(gameCode)
+  } catch (error) {
+    console.error(`Failed to handle 'readSymLinks':`, error)
+  }
+})
+
 // Watch for changes in the JSON file and send a message to the renderer
+//TODO: if the JSON does not exist, watcher does not work
 if (fs.existsSync(JSON_PATH)) {
   fs.watch(JSON_PATH, (eventType, filename) => {
     if (filename && eventType === 'change') {
