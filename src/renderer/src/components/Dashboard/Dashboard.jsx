@@ -2,7 +2,11 @@ function Dashboard() {
   return (
     <div className="dashboard">
       <h1>Dashboard</h1>
-      <p>some content, instructions, statistics, blabla</p>
+      <ul>
+        Perfect Functionality:
+        <li>Game folder create</li>
+        <li>Game folder delete</li>
+      </ul>
     </div>
   )
 }

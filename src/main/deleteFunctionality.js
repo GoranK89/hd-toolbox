@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { NEW_UPLOAD_PATH, JSON_PATH } from './paths'
+import { BASE_PATH, JSON_PATH } from './paths'
 import specialGameProviders from './specialGameProviders'
 import { readSymlinks } from './readFolderData'
 
@@ -40,7 +40,7 @@ const deleteGameCodes = async (gameCodesToDelete) => {
     fs.writeFileSync(JSON_PATH, newData)
 
     // Delete links
-    const linksPath = path.join(NEW_UPLOAD_PATH, 'icons.txt')
+    const linksPath = path.join(BASE_PATH, 'icons.txt')
     const linksForDeleting = await readSymlinks(gameCodesToDelete)
     const linksToKeep = fs
       .readFileSync(linksPath, 'utf8')
@@ -50,7 +50,7 @@ const deleteGameCodes = async (gameCodesToDelete) => {
     fs.writeFileSync(linksPath, linksToKeep.join('\n'))
 
     // Delete the folder
-    const folderPath = path.join(NEW_UPLOAD_PATH, gameCodesToDelete)
+    const folderPath = path.join(BASE_PATH, gameCodesToDelete)
     fs.rmSync(folderPath, { recursive: true, force: true })
   } catch (error) {
     console.error(`Failed to handle 'deleteGameCodes':`, error)

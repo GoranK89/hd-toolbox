@@ -15,7 +15,7 @@ const GameCodesForm = () => {
         .map((code) => code.replace(/\s/g, ''))
         .filter((code) => code !== '')
 
-      // store the cleaned up codes array
+      // // store the cleaned up codes array
       window.api.storeGameCodes(codesArray)
 
       setGameCodes('')

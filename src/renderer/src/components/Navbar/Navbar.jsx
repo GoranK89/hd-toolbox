@@ -1,32 +1,13 @@
-import { useState } from 'react'
+import { NavLink } from 'react-router-dom'
 
-function Navbar(props) {
-  const [active, setActive] = useState('dashboard')
-
-  const toggleActive = (item) => {
-    setActive(item)
-    props.onSelect(item)
-  }
-
+function Navbar() {
   return (
     <ul className="navbar">
-      <li
-        className={`navbar__item ${active === 'dashboard' ? 'navbar__item--active' : ''}`}
-        onClick={() => toggleActive('dashboard')}
-      >
-        Dashboard
+      <li>
+       <NavLink className='navbar__item' to="/">Dashboard</NavLink>
       </li>
-      <li
-        className={`navbar__item ${active === 'games' ? 'navbar__item--active' : ''}`}
-        onClick={() => toggleActive('games')}
-      >
-        Games
-      </li>
-      <li
-        className={`navbar__item ${active === 'other' ? 'navbar__item--active' : ''}`}
-        onClick={() => toggleActive('other')}
-      >
-        Another one
+      <li>
+       <NavLink className='navbar__item' to="games">Games</NavLink>
       </li>
     </ul>
   )

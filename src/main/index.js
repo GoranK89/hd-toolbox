@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import path from 'path'
 import fs from 'fs'
-import { BASE_PATH, NEW_UPLOAD_PATH, JSON_PATH } from './paths'
+import { BASE_PATH, JSON_PATH } from './paths'
 import { createGameFolder } from './gameFolders'
 import { getFolderData, readSymlinks } from './readFolderData'
 import createLinks from './generateIconLinks'
@@ -91,13 +91,13 @@ async function writeJSONFile(path, data) {
 // store game codes and create folders and files
 ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
   // Create the folder for new upload
+  let gameCodes = {}
+
   try {
     await fs.promises.access(BASE_PATH)
   } catch (error) {
-    await fs.promises.mkdir(NEW_UPLOAD_PATH)
+    await fs.promises.mkdir(BASE_PATH)
   }
-
-  let gameCodes = {}
 
   try {
     gameCodes = await readJSONFile(JSON_PATH)
@@ -133,14 +133,14 @@ ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
     fs.writeFileSync(JSON_PATH, data)
 
     // Create the folders with JSON data
-    createGameFolder(NEW_UPLOAD_PATH, data)
+    createGameFolder(BASE_PATH, data)
   })
 
   // Create the links
   const json = await fs.promises.readFile(JSON_PATH, 'utf8')
   const currentGameCodes = JSON.parse(json)
   const allGameCodes = Object.values(currentGameCodes).flat()
-  createLinks(NEW_UPLOAD_PATH, allGameCodes)
+  createLinks(BASE_PATH, allGameCodes)
 })
 
 // send folder data to renderer
@@ -162,6 +162,7 @@ ipcMain.on('deleteGameCodes', async (event, gameCodesToDelete) => {
   }
 })
 
+// send symlinks to renderer
 ipcMain.handle('readSymLinks', async (event, gameCode) => {
   try {
     return readSymlinks(gameCode)
@@ -185,6 +186,5 @@ if (fs.existsSync(JSON_PATH)) {
   console.log(`File ${JSON_PATH} does not exist`)
 }
 
-// create a database of game providers (short name and full name) and link it to storing game codes
 // implement an overview of all created folders and links, which can be edited from inside the app (expandable box bellow game code - see links option)
 // connect to google sheets API to get game names and types
