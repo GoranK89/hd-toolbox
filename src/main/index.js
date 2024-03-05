@@ -88,26 +88,27 @@ async function writeJSONFile(path, data) {
   await fs.promises.writeFile(path, jsonData)
 }
 
-// store game codes and create folders and files
-ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
-  // Create the folder for new upload
-  let gameCodes = {}
+// STORE game codes to JSON file
+async function storeGameCodes(newGameCodes) {
+  let existingGameCodes = []
 
+  // Read existing game codes, if cannot read, create a new JSON file
   try {
-    await fs.promises.access(BASE_PATH)
+    existingGameCodes = await readJSONFile(JSON_PATH)
   } catch (error) {
-    await fs.promises.mkdir(BASE_PATH)
-  }
-
-  try {
-    gameCodes = await readJSONFile(JSON_PATH)
-  } catch (error) {
-    await writeJSONFile(JSON_PATH, gameCodes)
+    if (error.code === 'ENOENT') {
+      console.log(`File ${JSON_PATH} does not exist, creating a new one.`)
+      await writeJSONFile(JSON_PATH, existingGameCodes)
+    } else {
+      // If the error is not because the file doesn't exist, rethrow it.
+      throw error
+    }
   }
 
   newGameCodes.forEach((newGameCode) => {
     let [gameProvider] = newGameCode.split('_')
 
+    // Remove the last letter from the game provider if it is 'M' or 'D' - needs retinking, how to store special cases
     if (specialGameProviders.includes(gameProvider)) {
       const gameProviderLastLetter = gameProvider[gameProvider.length - 1]
       if (gameProviderLastLetter === 'M') {
@@ -117,30 +118,43 @@ ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
       }
     }
 
-    // If game provider is not in the object, add it
-    if (!gameCodes[gameProvider]) {
-      gameCodes[gameProvider] = []
-    }
-    // If game code is not in the array, add it or log duplicates
-    if (!gameCodes[gameProvider].includes(newGameCode)) {
-      gameCodes[gameProvider].push(newGameCode)
+    // if game code is not present in JSON, add it else log the duplicate
+    if (!existingGameCodes.some((gameCode) => gameCode.id === newGameCode)) {
+      existingGameCodes.push({
+        id: newGameCode,
+        name: newGameCode,
+        provider: gameProvider,
+        similarGames: []
+      })
     } else {
       console.log(`Duplicate game code: ${newGameCode}`)
     }
 
     // Write the added game codes to JSON file
-    const data = JSON.stringify(gameCodes, null, 2)
+    const data = JSON.stringify(existingGameCodes, null, 2)
     fs.writeFileSync(JSON_PATH, data)
 
     // Create the folders with JSON data
     createGameFolder(BASE_PATH, data)
   })
+}
 
-  // Create the links
+// store game codes and create folders and files
+ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
+  // Create the folder for new upload
+  try {
+    await fs.promises.access(BASE_PATH)
+  } catch (error) {
+    await fs.promises.mkdir(BASE_PATH)
+  }
+
+  // Store the game codes
+  storeGameCodes(newGameCodes)
+
+  // Create the folder links for icons
   const json = await fs.promises.readFile(JSON_PATH, 'utf8')
-  const currentGameCodes = JSON.parse(json)
-  const allGameCodes = Object.values(currentGameCodes).flat()
-  createLinks(BASE_PATH, allGameCodes)
+  const currentGameCodes = JSON.parse(json).map((game) => game.id)
+  createLinks(BASE_PATH, currentGameCodes)
 })
 
 // send folder data to renderer

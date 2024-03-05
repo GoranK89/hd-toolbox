@@ -4,10 +4,14 @@ function Navbar() {
   return (
     <ul className="navbar">
       <li>
-       <NavLink className='navbar__item' to="/">Dashboard</NavLink>
+        <NavLink className="navbar__item" to="/">
+          Dashboard
+        </NavLink>
       </li>
       <li>
-       <NavLink className='navbar__item' to="games">Games</NavLink>
+        <NavLink className="navbar__item" to="games">
+          Games
+        </NavLink>
       </li>
     </ul>
   )
