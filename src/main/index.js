@@ -3,7 +3,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import path from 'path'
 import fs from 'fs'
 import { BASE_PATH, JSON_PATH } from './paths'
-import { createGameFolder } from './gameFolders'
+import { createGameFolders } from './gameFolders'
 import { getFolderData, readSymlinks } from './readFolderData'
 import { deleteGameCodes, deleteFolders } from './deleteFunctions'
 import createLinks from './generateIconLinks'
@@ -154,8 +154,10 @@ async function storeGameCodes(newGameCodes) {
   const data = JSON.stringify(existingGameCodes, null, 2)
   fs.writeFileSync(JSON_PATH, data)
 
+  const data2 = await readJSONFile(JSON_PATH)
+
   // Create the folder for the game codes stored in JSON
-  createGameFolder(BASE_PATH, data)
+  createGameFolders(BASE_PATH, data2)
 }
 
 // store game codes and create folders and files
