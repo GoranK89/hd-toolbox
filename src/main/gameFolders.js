@@ -7,6 +7,7 @@ function createGameFolders(basePath, gameCodes) {
     const iconsPath = path.join(gameCodePath, 'launch')
     const originalPath = path.join(gameCodePath, 'original')
     const gameIniPath = path.join(gameCodePath, 'game_en.ini')
+
     const gameName = gameCode.name
       .toLowerCase()
       .split(' ')

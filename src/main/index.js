@@ -151,13 +151,13 @@ async function storeGameCodes(newGameCodes) {
   })
 
   // Write the added game codes to JSON file
-  const data = JSON.stringify(existingGameCodes, null, 2)
-  fs.writeFileSync(JSON_PATH, data)
+  await writeJSONFile(JSON_PATH, existingGameCodes)
 
-  const data2 = await readJSONFile(JSON_PATH)
+  // read the game codes from JSON
+  const gameCodesFromJson = await readJSONFile(JSON_PATH)
 
-  // Create the folder for the game codes stored in JSON
-  createGameFolders(BASE_PATH, data2)
+  // Create the folders from the read JSON
+  createGameFolders(BASE_PATH, gameCodesFromJson)
 }
 
 // store game codes and create folders and files
