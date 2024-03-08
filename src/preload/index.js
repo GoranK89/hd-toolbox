@@ -3,8 +3,8 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const api = {
-  storeGameCodes: (gameCodes) => {
-    ipcRenderer.send('storeGameCodes', gameCodes)
+  receiveGameCodes: (gameCodes) => {
+    ipcRenderer.send('receiveGameCodes', gameCodes)
   },
   deleteGameCodes: (gameCodes) => {
     ipcRenderer.send('deleteGameCodes', gameCodes)

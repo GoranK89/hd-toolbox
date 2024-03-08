@@ -5,8 +5,8 @@ import fs from 'fs'
 import { BASE_PATH, JSON_PATH } from './paths'
 import { createGameFolder } from './gameFolders'
 import { getFolderData, readSymlinks } from './readFolderData'
+import { deleteGameCodes, deleteFolders } from './deleteFunctions'
 import createLinks from './generateIconLinks'
-import deleteGameCodes from './deleteFunctionality'
 import specialGameProviders from './specialGameProviders'
 import icon from '../../resources/icon.png?asset'
 
@@ -88,7 +88,12 @@ async function writeJSONFile(path, data) {
   await fs.promises.writeFile(path, jsonData)
 }
 
-// STORE game codes to JSON file
+function extractRTP(noGpGameCode) {
+  let lastPart = noGpGameCode[noGpGameCode.length - 1]
+  let lastTwoChars = lastPart.slice(-2)
+  return Number(lastTwoChars)
+}
+
 async function storeGameCodes(newGameCodes) {
   let existingGameCodes = []
 
@@ -106,7 +111,8 @@ async function storeGameCodes(newGameCodes) {
   }
 
   newGameCodes.forEach((newGameCode) => {
-    let [gameProvider] = newGameCode.split('_')
+    let [gameProvider, ...noGpGameCodeArray] = newGameCode.split('_')
+    const gameCodeRTP = extractRTP(noGpGameCodeArray)
 
     // Remove the last letter from the game provider if it is 'M' or 'D' - needs retinking, how to store special cases
     if (specialGameProviders.includes(gameProvider)) {
@@ -118,29 +124,42 @@ async function storeGameCodes(newGameCodes) {
       }
     }
 
+    // if game code is PP_GAME_90, pop number to compare with gamecode.name
+    if (gameCodeRTP) noGpGameCodeArray.pop()
+    const noGpNoRTPGameCode = noGpGameCodeArray.join(' ')
+
+    const existingGameCode = existingGameCodes.find(
+      (gameCode) => gameCode.name === noGpNoRTPGameCode
+    )
+
+    if (existingGameCode && !existingGameCode.similarGames.includes(newGameCode)) {
+      existingGameCode.similarGames.push(newGameCode)
+      return
+    }
+
     // if game code is not present in JSON, add it else log the duplicate
     if (!existingGameCodes.some((gameCode) => gameCode.id === newGameCode)) {
       existingGameCodes.push({
         id: newGameCode,
-        name: newGameCode,
+        name: noGpNoRTPGameCode,
         provider: gameProvider,
         similarGames: []
       })
     } else {
       console.log(`Duplicate game code: ${newGameCode}`)
     }
-
-    // Write the added game codes to JSON file
-    const data = JSON.stringify(existingGameCodes, null, 2)
-    fs.writeFileSync(JSON_PATH, data)
-
-    // Create the folders with JSON data
-    createGameFolder(BASE_PATH, data)
   })
+
+  // Write the added game codes to JSON file
+  const data = JSON.stringify(existingGameCodes, null, 2)
+  fs.writeFileSync(JSON_PATH, data)
+
+  // Create the folder for the game codes stored in JSON
+  createGameFolder(BASE_PATH, data)
 }
 
 // store game codes and create folders and files
-ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
+ipcMain.on('receiveGameCodes', async (event, newGameCodes) => {
   // Create the folder for new upload
   try {
     await fs.promises.access(BASE_PATH)
@@ -149,7 +168,7 @@ ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
   }
 
   // Store the game codes
-  storeGameCodes(newGameCodes)
+  await storeGameCodes(newGameCodes)
 
   // Create the folder links for icons
   const json = await fs.promises.readFile(JSON_PATH, 'utf8')
@@ -171,6 +190,7 @@ ipcMain.handle('uploadFolderContent', async () => {
 ipcMain.on('deleteGameCodes', async (event, gameCodesToDelete) => {
   try {
     await deleteGameCodes(gameCodesToDelete)
+    await deleteFolders(gameCodesToDelete)
   } catch (error) {
     console.error(`Failed to handle 'deleteGameCodes':`, error)
   }

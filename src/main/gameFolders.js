@@ -32,7 +32,7 @@ function createGameFolder(basePath, gameCode) {
       .map((word) => (word === 'and' ? word : word.charAt(0).toUpperCase() + word.substring(1)))
       .join(' ')
 
-    // Check if the last two characters form a number between 80 and 100
+    // Check if the last two characters are a number between 80 and 100
     const lastTwoChars = gameName.slice(-2)
     const lastTwoCharsAsNumber = parseInt(lastTwoChars, 10)
 

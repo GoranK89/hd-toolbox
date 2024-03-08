@@ -16,8 +16,8 @@ const GameCodesForm = () => {
         .filter((code) => code !== '')
 
       // // store the cleaned up codes array
-      window.api.storeGameCodes(codesArray)
-
+      window.api.receiveGameCodes(codesArray)
+      console.log('React game codes received:', codesArray)
       setGameCodes('')
     } catch (error) {
       console.error('Error submitting game codes', error)
