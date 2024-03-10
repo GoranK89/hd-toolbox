@@ -173,9 +173,8 @@ ipcMain.on('receiveGameCodes', async (event, newGameCodes) => {
   await storeGameCodes(newGameCodes)
 
   // Create the folder links for icons
-  const json = await fs.promises.readFile(JSON_PATH, 'utf8')
-  const currentGameCodes = JSON.parse(json).map((game) => game.id)
-  createLinks(BASE_PATH, currentGameCodes)
+  const json = await readJSONFile(JSON_PATH)
+  createLinks(BASE_PATH, json)
 })
 
 // send folder data to renderer
