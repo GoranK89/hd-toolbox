@@ -167,7 +167,7 @@ async function storeGameCodes(newGameCodes) {
 }
 
 // store game codes and create folders and files
-ipcMain.on('receiveGameCodes', async (event, newGameCodes) => {
+ipcMain.handle('receiveGameCodes', async (event, newGameCodes) => {
   // Create the folder for new upload
   try {
     await fs.promises.access(BASE_PATH)
@@ -181,6 +181,9 @@ ipcMain.on('receiveGameCodes', async (event, newGameCodes) => {
   // Create the folder links for icons
   const json = await readJSONFile(JSON_PATH)
   createLinks(BASE_PATH, json)
+
+  // Return the game upload folder content to renderer
+  return getFolderData()
 })
 
 // send folder data to renderer
@@ -211,21 +214,6 @@ ipcMain.handle('readSymLinks', async (event, gameCode) => {
     console.error(`Failed to handle 'readSymLinks':`, error)
   }
 })
-
-// Watch for changes in the JSON file and send a message to the renderer
-//TODO: if the JSON does not exist, watcher does not work
-if (fs.existsSync(JSON_PATH)) {
-  fs.watch(JSON_PATH, (eventType, filename) => {
-    if (filename && eventType === 'change') {
-      const windows = BrowserWindow.getAllWindows()
-      windows.forEach((win) => {
-        win.webContents.send('jsonFileChanged')
-      })
-    }
-  })
-} else {
-  console.log(`File ${JSON_PATH} does not exist`)
-}
 
 // implement an overview of all created folders and links, which can be edited from inside the app (expandable box bellow game code - see links option)
 // connect to google sheets API to get game names and types

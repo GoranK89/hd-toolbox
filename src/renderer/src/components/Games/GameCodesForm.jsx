@@ -1,9 +1,11 @@
 import { useState } from 'react'
+import { useUploadFolder } from '../../contexts/UploadFolderContext'
 
 const GameCodesForm = () => {
   const [gameCodes, setGameCodes] = useState('')
+  const { storeGameCodes } = useUploadFolder()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     try {
@@ -16,8 +18,7 @@ const GameCodesForm = () => {
         .filter((code) => code !== '')
 
       // // store the cleaned up codes array
-      window.api.receiveGameCodes(codesArray)
-      console.log('React game codes received:', codesArray)
+      storeGameCodes(codesArray)
       setGameCodes('')
     } catch (error) {
       console.error('Error submitting game codes', error)

@@ -4,7 +4,7 @@ import { electronAPI } from '@electron-toolkit/preload'
 // Custom APIs for renderer
 const api = {
   receiveGameCodes: (gameCodes) => {
-    ipcRenderer.send('receiveGameCodes', gameCodes)
+    return ipcRenderer.invoke('receiveGameCodes', gameCodes)
   },
   deleteGameCodes: (gameCodes) => {
     ipcRenderer.send('deleteGameCodes', gameCodes)
@@ -14,12 +14,6 @@ const api = {
   },
   readSymLinks: (gameCode) => {
     return ipcRenderer.invoke('readSymLinks', gameCode)
-  },
-  subscribeToJsonChanges: (callback) => {
-    ipcRenderer.on('jsonFileChanged', callback)
-  },
-  unsubscribeToJsonChanges: (callback) => {
-    ipcRenderer.removeListener('jsonFileChanged', callback)
   }
 }
 
