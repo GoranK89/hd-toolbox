@@ -3,6 +3,7 @@ import { useUploadFolder } from '../../contexts/UploadFolderContext'
 
 const GeneratedFolders = () => {
   const { state, deleteFolder } = useUploadFolder()
+
   return (
     <div className="generated-folders">
       {state.map((item, index) => (

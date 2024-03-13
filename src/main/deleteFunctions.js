@@ -15,7 +15,7 @@ const deleteGameCodes = async (gameCodesToDelete) => {
   fs.writeFileSync(JSON_PATH, newData)
 }
 
-const deleteFolders = async (folderName) => {
+const deleteFolders = (folderName) => {
   const folderPath = path.join(BASE_PATH, folderName)
   fs.rmSync(folderPath, { recursive: true, force: true })
 }

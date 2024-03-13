@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-function createGameFolders(basePath, gameCodes) {
+function createGameFolder(basePath, gameCodes) {
   gameCodes.forEach((gameCode) => {
     const gameCodePath = path.join(basePath, gameCode.id)
     const iconsPath = path.join(gameCodePath, 'launch')
@@ -27,4 +27,4 @@ function createGameFolders(basePath, gameCodes) {
   })
 }
 
-export { createGameFolders }
+export { createGameFolder }

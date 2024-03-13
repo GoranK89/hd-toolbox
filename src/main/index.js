@@ -3,7 +3,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import path from 'path'
 import fs from 'fs'
 import { BASE_PATH, JSON_PATH } from './paths'
-import { createGameFolders } from './gameFolders'
+import { createGameFolder } from './gameFolders'
 import { getFolderData, readSymlinks } from './readFolderData'
 import { deleteGameCodes, deleteFolders } from './deleteFunctions'
 import createLinks from './generateIconLinks'
@@ -94,7 +94,15 @@ function extractRTP(noGpGameCode) {
   return Number(lastTwoChars)
 }
 
-async function storeGameCodes(newGameCodes) {
+async function ensureUploadFolderExists(path) {
+  try {
+    await fs.promises.access(path)
+  } catch (error) {
+    await fs.promises.mkdir(path)
+  }
+}
+
+async function readExistingGameCodes() {
   let existingGameCodes = []
 
   // Read existing game codes, if cannot read, create a new JSON file
@@ -110,73 +118,85 @@ async function storeGameCodes(newGameCodes) {
     }
   }
 
-  newGameCodes.forEach((newGameCode) => {
-    let [gameProvider, ...noGpGameCodeArray] = newGameCode.split('_')
-    const gameCodeRTP = extractRTP(noGpGameCodeArray)
-
-    // Remove the last letter from the game provider if it is 'M' or 'D' - needs retinking, how to store special cases
-    if (specialGameProviders.includes(gameProvider)) {
-      // NOTE: so far mobile game codes all work like this, and no regular GP ends with M
-      const gameProviderLastLetter = gameProvider[gameProvider.length - 1]
-      if (gameProviderLastLetter === 'M') {
-        gameProvider = gameProvider.slice(0, -1)
-        // the very special cases are handled bellow
-      } else if (gameProvider === 'MGSD') {
-        gameProvider = 'MGS'
-      } else if (gameProvider === 'NETEE') {
-        gameProvider = 'NETE'
-      } else if (gameProvider === 'EVOLD' || gameProvider === 'EVOLDM') {
-        gameProvider = 'EVOL'
-      }
-    }
-
-    // if game code is PP_GAME_90, pop number to compare with gamecode.name
-    if (gameCodeRTP) noGpGameCodeArray.pop()
-    const noGpNoRTPGameCode = noGpGameCodeArray.join(' ')
-
-    const existingGameCode = existingGameCodes.find(
-      (gameCode) => gameCode.name === noGpNoRTPGameCode
-    )
-
-    if (existingGameCode && !existingGameCode.similarGames.includes(newGameCode)) {
-      existingGameCode.similarGames.push(newGameCode)
-      return
-    }
-
-    // if game code is not present in JSON, add it else log the duplicate
-    if (!existingGameCodes.some((gameCode) => gameCode.id === newGameCode)) {
-      existingGameCodes.push({
-        id: newGameCode,
-        name: noGpNoRTPGameCode,
-        provider: gameProvider,
-        similarGames: []
-      })
-    } else {
-      console.log(`Duplicate game code: ${newGameCode}`)
-    }
-  })
-
-  // Write the added game codes to JSON file
-  await writeJSONFile(JSON_PATH, existingGameCodes)
-
-  // read the game codes from JSON
-  const gameCodesFromJson = await readJSONFile(JSON_PATH)
-
-  // Create the folders from the read JSON
-  createGameFolders(BASE_PATH, gameCodesFromJson)
+  return existingGameCodes
 }
 
-// store game codes and create folders and files
-ipcMain.handle('receiveGameCodes', async (event, newGameCodes) => {
-  // Create the folder for new upload
-  try {
-    await fs.promises.access(BASE_PATH)
-  } catch (error) {
-    await fs.promises.mkdir(BASE_PATH)
+function handleSpecialGameProviders(gameProvider) {
+  // NOTE: so far mobile game codes all work like this, and no regular GP ends with M
+  const gameProviderLastLetter = gameProvider[gameProvider.length - 1]
+  if (gameProviderLastLetter === 'M') {
+    gameProvider = gameProvider.slice(0, -1)
+    // the very special cases are handled bellow
+  } else if (gameProvider === 'MGSD') {
+    gameProvider = 'MGS'
+  } else if (gameProvider === 'NETEE') {
+    gameProvider = 'NETE'
+  } else if (gameProvider === 'EVOLD' || gameProvider === 'EVOLDM') {
+    gameProvider = 'EVOL'
   }
 
-  // Store the game codes
-  await storeGameCodes(newGameCodes)
+  return gameProvider
+}
+
+function processGameCode(newGameCode, existingGameCodes) {
+  let [gameProvider, ...noGpGameCodeArray] = newGameCode.split('_')
+  const gameCodeRTP = extractRTP(noGpGameCodeArray)
+
+  // Remove the last letter from the game provider if it is 'M' or 'D' - needs retinking, how to store special cases
+  if (specialGameProviders.includes(gameProvider)) {
+    gameProvider = handleSpecialGameProviders(gameProvider)
+  }
+
+  // if game code is PP_GAME_90, pop number to compare with gamecode.name
+  if (gameCodeRTP) noGpGameCodeArray.pop()
+  const noGpNoRTPGameCode = noGpGameCodeArray.join(' ')
+  const existingGameCode = existingGameCodes.find((gameCode) => gameCode.name === noGpNoRTPGameCode)
+
+  if (existingGameCode && !existingGameCode.similarGames.includes(newGameCode)) {
+    existingGameCode.similarGames.push(newGameCode)
+    return existingGameCodes
+  }
+
+  // if game code is not present in JSON, add it else log the duplicate
+  if (!existingGameCodes.some((gameCode) => gameCode.id === newGameCode)) {
+    existingGameCodes.push({
+      id: newGameCode,
+      name: noGpNoRTPGameCode,
+      provider: gameProvider,
+      similarGames: []
+    })
+  } else {
+    console.log(`Duplicate game code: ${newGameCode}`)
+  }
+
+  return existingGameCodes
+}
+
+async function storeGameCodes(gameCodes) {
+  await writeJSONFile(JSON_PATH, gameCodes)
+}
+
+async function createGameFolders() {
+  const gameCodesFromJson = await readJSONFile(JSON_PATH)
+  createGameFolder(BASE_PATH, gameCodesFromJson)
+}
+
+async function handleGameCodes(newGameCodes) {
+  await ensureUploadFolderExists(BASE_PATH)
+
+  let existingGameCodes = await readExistingGameCodes()
+
+  newGameCodes.forEach((newGameCode) => {
+    existingGameCodes = processGameCode(newGameCode, existingGameCodes)
+  })
+
+  await storeGameCodes(existingGameCodes)
+  await createGameFolders()
+}
+
+/////////////////////////// IPC Handlers ///////////////////////////
+ipcMain.handle('receiveGameCodes', async (event, newGameCodes) => {
+  await handleGameCodes(newGameCodes)
 
   // Create the folder links for icons
   const json = await readJSONFile(JSON_PATH)
@@ -186,21 +206,15 @@ ipcMain.handle('receiveGameCodes', async (event, newGameCodes) => {
   return getFolderData()
 })
 
-// send folder data to renderer
-ipcMain.handle('uploadFolderContent', async () => {
-  try {
-    const folderData = getFolderData()
-    return folderData
-  } catch (error) {
-    console.error(`Failed to handle 'uploadFolderData':`, error)
-  }
-})
-
 // delete game codes and folders
 ipcMain.on('deleteGameCodes', async (event, gameCodesToDelete) => {
   try {
     await deleteGameCodes(gameCodesToDelete)
-    await deleteFolders(gameCodesToDelete)
+    deleteFolders(gameCodesToDelete)
+
+    // read the game codes from JSON and regenerate icons txt file
+    const json = await readJSONFile(JSON_PATH)
+    createLinks(BASE_PATH, json)
   } catch (error) {
     console.error(`Failed to handle 'deleteGameCodes':`, error)
   }
