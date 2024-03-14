@@ -6,7 +6,6 @@ const deleteGameCodes = async (gameCodesToDelete) => {
   // Read the game codes from JSON
   const data = await fs.promises.readFile(JSON_PATH, 'utf8')
   let gameCodes = JSON.parse(data)
-
   // Fiter out the game codes to delete
   const filteredGameCodes = gameCodes.filter((gameCode) => !gameCodesToDelete.includes(gameCode.id))
 

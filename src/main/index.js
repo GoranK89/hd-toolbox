@@ -91,7 +91,10 @@ async function writeJSONFile(path, data) {
 function extractRTP(noGpGameCode) {
   let lastPart = noGpGameCode[noGpGameCode.length - 1]
   let lastTwoChars = lastPart.slice(-2)
-  return Number(lastTwoChars)
+  Number(lastTwoChars)
+  if (lastTwoChars >= 88 && lastTwoChars <= 98) {
+    return lastTwoChars
+  }
 }
 
 async function ensureUploadFolderExists(path) {
@@ -123,6 +126,7 @@ async function readExistingGameCodes() {
 
 function handleSpecialGameProviders(gameProvider) {
   // NOTE: so far mobile game codes all work like this, and no regular GP ends with M
+  // Remove the last letter from the game provider if it is 'M' or 'D' - needs retinking, how to store special cases
   const gameProviderLastLetter = gameProvider[gameProvider.length - 1]
   if (gameProviderLastLetter === 'M') {
     gameProvider = gameProvider.slice(0, -1)
@@ -138,11 +142,11 @@ function handleSpecialGameProviders(gameProvider) {
   return gameProvider
 }
 
+// receives a game code and the existing game codes, compares new game code with existing ones and returns the updated game code object
 function processGameCode(newGameCode, existingGameCodes) {
   let [gameProvider, ...noGpGameCodeArray] = newGameCode.split('_')
   const gameCodeRTP = extractRTP(noGpGameCodeArray)
 
-  // Remove the last letter from the game provider if it is 'M' or 'D' - needs retinking, how to store special cases
   if (specialGameProviders.includes(gameProvider)) {
     gameProvider = handleSpecialGameProviders(gameProvider)
   }
@@ -177,10 +181,11 @@ async function storeGameCodes(gameCodes) {
 }
 
 async function createGameFolders() {
-  const gameCodesFromJson = await readJSONFile(JSON_PATH)
-  createGameFolder(BASE_PATH, gameCodesFromJson)
+  const gameCodesJson = await readJSONFile(JSON_PATH)
+  createGameFolder(BASE_PATH, gameCodesJson)
 }
 
+// Receives new game codes, reads existing game codes, processes/compares them and stores them in JSON, creates according folders
 async function handleGameCodes(newGameCodes) {
   await ensureUploadFolderExists(BASE_PATH)
 
@@ -203,10 +208,11 @@ ipcMain.handle('receiveGameCodes', async (event, newGameCodes) => {
   createLinks(BASE_PATH, json)
 
   // Return the game upload folder content to renderer
+  //NOTE: send this data in a different ipc handler (one-way to renderer) to update state imediately on app load
   return getFolderData()
 })
 
-// delete game codes and folders
+// delete game codes and folders - needs changes, deletes game codes that it should not
 ipcMain.on('deleteGameCodes', async (event, gameCodesToDelete) => {
   try {
     await deleteGameCodes(gameCodesToDelete)

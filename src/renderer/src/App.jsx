@@ -1,22 +1,31 @@
 import { HashRouter, Routes, Route } from 'react-router-dom'
 
 import { UploadFolderProvider } from './contexts/UploadFolderContext'
+import { AuthProvider } from './contexts/AuthContext'
 
-import Navbar from './components/Navbar/Navbar'
-import Dashboard from './components/Dashboard/Dashboard'
-import Games from './components/Games/Games'
+import AppLayout from './pages/AppLayout'
+import Login from './pages/Login'
+import ProtectedRoute from './pages/ProtectedRoute'
 
 function App() {
   return (
-    <UploadFolderProvider>
-      <HashRouter>
-        <Navbar />
-        <Routes>
-          <Route index path="/" element={<Dashboard />} />
-          <Route path="games" element={<Games />} />
-        </Routes>
-      </HashRouter>
-    </UploadFolderProvider>
+    <AuthProvider>
+      <UploadFolderProvider>
+        <HashRouter>
+          <Routes>
+            <Route index path="/" element={<Login />} />
+            <Route
+              path="app"
+              element={
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </HashRouter>
+      </UploadFolderProvider>
+    </AuthProvider>
   )
 }
 
