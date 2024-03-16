@@ -1,11 +1,11 @@
-import Dashboard from '../components/Dashboard/Dashboard'
-import Games from '../components/Games/Games'
+import { Outlet } from 'react-router-dom'
+import Navbar from '../components/Navbar/Navbar'
 
 const AppLayout = () => {
   return (
-    <div>
-      <Dashboard />
-      <Games />
+    <div className="app-layout">
+      <Navbar />
+      <Outlet />
     </div>
   )
 }

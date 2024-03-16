@@ -4,7 +4,7 @@ function Navbar() {
   return (
     <ul className="navbar">
       <li>
-        <NavLink className="navbar__item" to="/">
+        <NavLink className="navbar__item" to="dashboard">
           Dashboard
         </NavLink>
       </li>
