@@ -1,7 +1,8 @@
 .games-grid {
-  height: 92vh;
+  height: 100vh;
   padding: 2rem;
   display: flex;
+  flex-grow: 1;
   gap: 5rem;
   background-image: url('../../../src/assets/backgroundMuted.png');
   background-position: center;
