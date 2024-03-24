@@ -4,7 +4,7 @@ import path from 'path'
 import fs from 'fs'
 import { BASE_PATH, JSON_PATH } from './paths'
 import { createGameFolder } from './gameFolders'
-import { getFolderData, readSymlinks } from './readFolderData'
+import { checkGameIcons, readSymlinks } from './readFolderData'
 import { deleteGameCodes, deleteFolders } from './deleteFunctions'
 import createLinks from './generateIconLinks'
 import specialGameProviders from './specialGameProviders'
@@ -88,6 +88,21 @@ async function writeJSONFile(path, data) {
   await fs.promises.writeFile(path, jsonData)
 }
 
+async function checkIconsInBrowser() {
+  if (!fs.existsSync) return
+  const gameCodes = await readJSONFile(JSON_PATH)
+  const iconUrls = gameCodes.flatMap((gameCode) => [
+    `https://cdn.oryxgaming.com/medialib/${gameCode.id}/launch/250x157.png`,
+    ...gameCode.similarGames.map(
+      (similarGame) => `https://cdn.oryxgaming.com/medialib/${similarGame}/launch/250x157.png`
+    )
+  ])
+
+  iconUrls.forEach((url) => {
+    shell.openExternal(url)
+  })
+}
+
 function extractRTP(noGpGameCode) {
   let lastPart = noGpGameCode[noGpGameCode.length - 1]
   let lastTwoChars = lastPart.slice(-2)
@@ -153,7 +168,12 @@ function processGameCode(newGameCode, existingGameCodes) {
 
   // if game code is PP_GAME_90, pop number to compare with gamecode.name
   if (gameCodeRTP) noGpGameCodeArray.pop()
-  const noGpNoRTPGameCode = noGpGameCodeArray.join(' ')
+  const noGpNoRTPGameCode = noGpGameCodeArray
+    .join(' ')
+    .toLowerCase()
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.substring(1))
+    .join(' ')
   const existingGameCode = existingGameCodes.find((gameCode) => gameCode.name === noGpNoRTPGameCode)
 
   if (existingGameCode && !existingGameCode.similarGames.includes(newGameCode)) {
@@ -167,7 +187,8 @@ function processGameCode(newGameCode, existingGameCodes) {
       id: newGameCode,
       name: noGpNoRTPGameCode,
       provider: gameProvider,
-      similarGames: []
+      similarGames: [],
+      iconsExist: false
     })
   } else {
     console.log(`Duplicate game code: ${newGameCode}`)
@@ -195,24 +216,35 @@ async function handleGameCodes(newGameCodes) {
     existingGameCodes = processGameCode(newGameCode, existingGameCodes)
   })
 
+  // Update iconsExist property for each game code
+  existingGameCodes = existingGameCodes.map((gameCode) => ({
+    ...gameCode,
+    iconsExist: checkGameIcons(gameCode.id)
+  }))
+
   await storeGameCodes(existingGameCodes)
   await createGameFolders()
 }
 
 /////////////////////////// IPC Handlers ///////////////////////////
-ipcMain.handle('receiveGameCodes', async (event, newGameCodes) => {
+ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
   await handleGameCodes(newGameCodes)
 
   // Create the folder links for icons
   const json = await readJSONFile(JSON_PATH)
   createLinks(BASE_PATH, json)
-
-  // Return the game upload folder content to renderer
-  //NOTE: send this data in a different ipc handler (one-way to renderer) to update state imediately on app load
-  return getFolderData()
 })
 
-// delete game codes and folders - needs changes, deletes game codes that it should not
+ipcMain.handle('readGameCodes', async (event) => {
+  try {
+    if (!fs.existsSync(JSON_PATH)) return []
+    const json = await readJSONFile(JSON_PATH)
+    return json
+  } catch (error) {
+    console.error(`Failed to handle 'readGameCodes':`, error)
+  }
+})
+
 ipcMain.on('deleteGameCodes', async (event, gameCodesToDelete) => {
   try {
     await deleteGameCodes(gameCodesToDelete)
@@ -226,7 +258,16 @@ ipcMain.on('deleteGameCodes', async (event, gameCodesToDelete) => {
   }
 })
 
-// send symlinks to renderer
+ipcMain.handle('openIconUrls', async () => {
+  try {
+    console.log('openIconUrls called')
+    await checkIconsInBrowser()
+  } catch (error) {
+    console.error('Error in openIconUrls:', error)
+  }
+})
+
+// send symlinks to renderer - NOPE, add all links to JSON and send it like that to renderer
 ipcMain.handle('readSymLinks', async (event, gameCode) => {
   try {
     return readSymlinks(gameCode)

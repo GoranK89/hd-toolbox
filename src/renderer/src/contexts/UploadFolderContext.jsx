@@ -22,8 +22,12 @@ function UploadFolderProvider({ children }) {
 
   // calls the main process to store the game codes, create folders and also receive folder contents
   async function storeGameCodes(gameCodes) {
-    const uploadFolderData = await window.api.receiveGameCodes(gameCodes)
-    dispatch({ type: 'foldersRead', payload: uploadFolderData })
+    await window.api.storeGameCodes(gameCodes)
+  }
+
+  async function readGameCodes() {
+    const gameCodes = await window.api.readGameCodes()
+    dispatch({ type: 'foldersRead', payload: gameCodes })
   }
 
   // calls the main process to delete the folder, then updates the state
@@ -32,8 +36,14 @@ function UploadFolderProvider({ children }) {
     dispatch({ type: 'folderDelete', payload: folderName })
   }
 
+  async function checkIconsInBrowser() {
+    await window.api.openIconUrls()
+  }
+
   return (
-    <UploadFolderContext.Provider value={{ state, storeGameCodes, deleteFolder }}>
+    <UploadFolderContext.Provider
+      value={{ state, storeGameCodes, readGameCodes, deleteFolder, checkIconsInBrowser }}
+    >
       {children}
     </UploadFolderContext.Provider>
   )

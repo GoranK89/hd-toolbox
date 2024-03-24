@@ -3,7 +3,7 @@ import { useUploadFolder } from '../../contexts/UploadFolderContext'
 
 const GameCodesForm = () => {
   const [gameCodes, setGameCodes] = useState('')
-  const { storeGameCodes } = useUploadFolder()
+  const { storeGameCodes, readGameCodes, checkIconsInBrowser } = useUploadFolder()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -18,27 +18,37 @@ const GameCodesForm = () => {
         .filter((code) => code !== '')
 
       // // store the cleaned up codes array
-      storeGameCodes(codesArray)
+      await storeGameCodes(codesArray)
+      await readGameCodes()
       setGameCodes('')
     } catch (error) {
       console.error('Error submitting game codes', error)
     }
   }
 
+  function checkCdnHandler() {
+    checkIconsInBrowser()
+  }
+
   return (
-    <form className="game-form" onSubmit={handleSubmit}>
-      <textarea
-        className="game-form__textarea"
-        value={gameCodes}
-        onChange={(e) => setGameCodes(e.target.value)}
-        placeholder="Enter game codes, one per line"
-        rows="10"
-        cols="30"
-      />
-      <button className="game-form__submit-button" type="submit">
-        Submit
+    <div className="form-layout">
+      <form className="game-form" onSubmit={handleSubmit}>
+        <textarea
+          className="game-form__textarea"
+          value={gameCodes}
+          onChange={(e) => setGameCodes(e.target.value)}
+          placeholder="Enter game codes, one per line"
+          rows="10"
+          cols="30"
+        />
+        <button className="game-form__submit-button" type="submit">
+          Submit
+        </button>
+      </form>
+      <button className="btn-cdn-check" onClick={checkCdnHandler}>
+        Check CDN
       </button>
-    </form>
+    </div>
   )
 }
 

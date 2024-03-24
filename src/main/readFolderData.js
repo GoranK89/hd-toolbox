@@ -2,30 +2,16 @@ import fs from 'fs'
 import path from 'path'
 import { BASE_PATH } from './paths'
 
-function getFolderData() {
-  if (!fs.existsSync(BASE_PATH)) {
-    return []
-  }
+function checkGameIcons(folderName) {
+  const uploadFolder = fs.readdirSync(BASE_PATH)
+  const folderExists = uploadFolder.includes(folderName)
 
-  const mainFolder = fs.readdirSync(BASE_PATH)
-  const foldersOnly = mainFolder.filter((item) => {
-    const extension = item.split('.').pop()
-    return extension !== 'json' && extension !== 'txt'
-  })
+  if (!folderExists) return false
 
-  const gameFoldersData = foldersOnly.map((folder) => {
-    const launchFolderPath = path.join(BASE_PATH, folder, 'launch')
-    const gameEnPath = path.join(BASE_PATH, folder, 'game_en.ini')
-
-    if (fs.existsSync(launchFolderPath) || gameEnPath) {
-      const launchFolderContent = fs.readdirSync(launchFolderPath)
-      const gameEnText = fs.readFileSync(gameEnPath, 'utf8').split('\n')
-      const iconExists = launchFolderContent.includes('250x157.png')
-      return { folder, iconExists, gameEnText }
-    }
-  })
-
-  return gameFoldersData
+  const launchFolderPath = path.join(BASE_PATH, folderName, 'launch')
+  const launchFolderContent = fs.readdirSync(launchFolderPath)
+  const iconExists = launchFolderContent.includes('250x157.png')
+  return iconExists
 }
 
 function readSymlinks(gameCode) {
@@ -37,4 +23,4 @@ function readSymlinks(gameCode) {
   return symlinkDataFiltered
 }
 
-export { getFolderData, readSymlinks }
+export { readSymlinks, checkGameIcons }

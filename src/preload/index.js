@@ -3,14 +3,17 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const api = {
-  receiveGameCodes: (gameCodes) => {
-    return ipcRenderer.invoke('receiveGameCodes', gameCodes)
+  storeGameCodes: (gameCodes) => {
+    ipcRenderer.send('storeGameCodes', gameCodes)
   },
   deleteGameCodes: (gameCodes) => {
     ipcRenderer.send('deleteGameCodes', gameCodes)
   },
-  uploadFolderContent: () => {
-    return ipcRenderer.invoke('uploadFolderContent')
+  readGameCodes: () => {
+    return ipcRenderer.invoke('readGameCodes')
+  },
+  openIconUrls: () => {
+    return ipcRenderer.invoke('openIconUrls')
   },
   readSymLinks: (gameCode) => {
     return ipcRenderer.invoke('readSymLinks', gameCode)

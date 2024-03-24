@@ -1,23 +1,29 @@
 import { FaTrash, FaExternalLinkAlt, FaTimes } from 'react-icons/fa'
 import { useUploadFolder } from '../../contexts/UploadFolderContext'
+import { useEffect } from 'react'
 
 const GeneratedFolders = () => {
-  const { state, deleteFolder } = useUploadFolder()
+  const { state, deleteFolder, readGameCodes } = useUploadFolder()
+
+  // reload component when state changes
+  useEffect(() => {
+    readGameCodes()
+  }, [state])
 
   return (
     <div className="generated-folders">
-      {state.map((item, index) => (
-        <div className="generated-folders__container" key={index}>
+      {state.map((item) => (
+        <div className="generated-folders__container" key={item.id}>
           <div className="generated-folders__container-description">
             <span>
-              <h2>{item.folder}</h2>
+              <h2>{item.id}</h2>
             </span>
-            <p>{item.gameEnText[1].split('=').pop()}</p>
-            <p className={item.iconExists ? 'icons-ok' : 'icons-check'}>
-              {item.iconExists ? 'Icons OK' : 'Icons missing'}
+            <p>{item.name}</p>
+            <p className={item.iconsExist ? 'icons-ok' : 'icons-check'}>
+              {item.iconsExist ? 'Icons OK' : 'Icons missing'}
             </p>
           </div>
-          <button className="btn-delete" onClick={() => deleteFolder(item.folder)}>
+          <button className="btn-delete" onClick={() => deleteFolder(item.id)}>
             <FaTrash />
           </button>
         </div>

@@ -90,13 +90,33 @@ input[type=number]::-webkit-outer-spin-button {
   background-repeat: no-repeat;
   background-size: cover;
 }
+.games-grid .form-layout {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+.games-grid .form-layout .btn-cdn-check {
+  cursor: pointer;
+  width: 100%;
+  height: 3rem;
+  border: none;
+  outline: none;
+  background-color: #8a556f;
+  color: #f8f8f8;
+  transition: background-color 0.3s ease-in-out;
+  font-size: 1.6rem;
+  font-weight: 600;
+  border-radius: 5px;
+}
+.games-grid .form-layout .btn-cdn-check:hover {
+  background-color: #bbb7d5;
+}
 .games-grid .game-form {
   display: flex;
   flex: 10;
   flex-direction: column;
   align-items: flex-start;
   height: 100%;
-  padding: 2rem;
 }
 .games-grid .game-form__textarea {
   width: 100%;
