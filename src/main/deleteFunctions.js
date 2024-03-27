@@ -1,17 +1,17 @@
 import fs from 'fs'
 import path from 'path'
 import { BASE_PATH, JSON_PATH } from './paths'
+import { readJSONFile, writeJSONFile } from './generalPurposeFunctions'
 
 const deleteGameCodes = async (gameCodesToDelete) => {
   // Read the game codes from JSON
-  const data = await fs.promises.readFile(JSON_PATH, 'utf8')
-  let gameCodes = JSON.parse(data)
+
+  let gameCodes = await readJSONFile(JSON_PATH)
   // Fiter out the game codes to delete
   const filteredGameCodes = gameCodes.filter((gameCode) => !gameCodesToDelete.includes(gameCode.id))
 
   // Write the filtered game codes to JSON file
-  const newData = JSON.stringify(filteredGameCodes, null, 2)
-  fs.writeFileSync(JSON_PATH, newData)
+  await writeJSONFile(JSON_PATH, filteredGameCodes)
 }
 
 const deleteFolders = (folderName) => {

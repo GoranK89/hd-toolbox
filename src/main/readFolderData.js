@@ -14,13 +14,4 @@ function checkGameIcons(folderName) {
   return iconExists
 }
 
-function readSymlinks(gameCode) {
-  const symlinkFile = path.join(BASE_PATH, 'icons.txt')
-  const symlinkData = fs.readFileSync(symlinkFile, 'utf8').split('\n')
-  const symlinkDataFiltered = symlinkData.filter((item) => {
-    return item.includes(gameCode)
-  })
-  return symlinkDataFiltered
-}
-
-export { readSymlinks, checkGameIcons }
+export { checkGameIcons }

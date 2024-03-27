@@ -3,8 +3,9 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import path from 'path'
 import fs from 'fs'
 import { BASE_PATH, JSON_PATH } from './paths'
+import { readJSONFile, writeJSONFile } from './generalPurposeFunctions'
 import { createGameFolder } from './gameFolders'
-import { checkGameIcons, readSymlinks } from './readFolderData'
+import { checkGameIcons } from './readFolderData'
 import { deleteGameCodes, deleteFolders } from './deleteFunctions'
 import createLinks from './generateIconLinks'
 import specialGameProviders from './specialGameProviders'
@@ -76,18 +77,6 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
-
-// Helper functions
-async function readJSONFile(path) {
-  const data = await fs.promises.readFile(path, 'utf8')
-  return JSON.parse(data)
-}
-
-async function writeJSONFile(path, data) {
-  const jsonData = JSON.stringify(data, null, 2)
-  await fs.promises.writeFile(path, jsonData)
-}
-
 async function checkIconsInBrowser() {
   if (!fs.existsSync) return
   const gameCodes = await readJSONFile(JSON_PATH)
@@ -175,9 +164,11 @@ function processGameCode(newGameCode, existingGameCodes) {
     .map((word) => word.charAt(0).toUpperCase() + word.substring(1))
     .join(' ')
   const existingGameCode = existingGameCodes.find((gameCode) => gameCode.name === noGpNoRTPGameCode)
-
   if (existingGameCode && !existingGameCode.similarGames.includes(newGameCode)) {
     existingGameCode.similarGames.push(newGameCode)
+    existingGameCode.symlinks.push(
+      `symlinks[]=${gameProvider}/${newGameCode},${gameProvider}/${existingGameCode.id}`
+    )
     return existingGameCodes
   }
 
@@ -188,7 +179,9 @@ function processGameCode(newGameCode, existingGameCodes) {
       name: noGpNoRTPGameCode,
       provider: gameProvider,
       similarGames: [],
-      iconsExist: false
+      iconsExist: false,
+      folderLink: `games[]=${gameProvider}/${newGameCode}`,
+      symlinks: []
     })
   } else {
     console.log(`Duplicate game code: ${newGameCode}`)
@@ -226,6 +219,8 @@ async function handleGameCodes(newGameCodes) {
   await createGameFolders()
 }
 
+// write symlinks into json file
+
 /////////////////////////// IPC Handlers ///////////////////////////
 ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
   await handleGameCodes(newGameCodes)
@@ -260,19 +255,9 @@ ipcMain.on('deleteGameCodes', async (event, gameCodesToDelete) => {
 
 ipcMain.handle('openIconUrls', async () => {
   try {
-    console.log('openIconUrls called')
     await checkIconsInBrowser()
   } catch (error) {
     console.error('Error in openIconUrls:', error)
-  }
-})
-
-// send symlinks to renderer - NOPE, add all links to JSON and send it like that to renderer
-ipcMain.handle('readSymLinks', async (event, gameCode) => {
-  try {
-    return readSymlinks(gameCode)
-  } catch (error) {
-    console.error(`Failed to handle 'readSymLinks':`, error)
   }
 })
 

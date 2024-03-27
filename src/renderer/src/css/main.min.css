@@ -286,4 +286,20 @@ input[type=number]::-webkit-outer-spin-button {
 
 .app-layout {
   display: flex;
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 2rem;
+}
+.dashboard .user-container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+.dashboard .user-profile {
+  display: flex;
+  gap: 1rem;
 }/*# sourceMappingURL=main.min.css.map */
