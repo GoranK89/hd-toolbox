@@ -1,5 +1,23 @@
 import fs from 'fs'
 
+// check if the last part of the game code is a number between 88 and 98 (RTP)
+function extractRTP(gameCode) {
+  let lastPart = gameCode[gameCode.length - 1]
+  let lastTwoChars = lastPart.slice(-2)
+  Number(lastTwoChars)
+  if (lastTwoChars >= 88 && lastTwoChars <= 98) {
+    return lastTwoChars
+  }
+}
+
+async function ensureUploadFolderExists(path) {
+  try {
+    await fs.promises.access(path)
+  } catch (error) {
+    await fs.promises.mkdir(path)
+  }
+}
+
 async function readJSONFile(path) {
   try {
     const data = await fs.promises.readFile(path, 'utf8')
@@ -24,4 +42,4 @@ async function writeJSONFile(path, data) {
   }
 }
 
-export { readJSONFile, writeJSONFile }
+export { extractRTP, ensureUploadFolderExists, readJSONFile, writeJSONFile }

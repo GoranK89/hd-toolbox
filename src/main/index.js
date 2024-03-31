@@ -3,7 +3,12 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import path from 'path'
 import fs from 'fs'
 import { BASE_PATH, JSON_PATH } from './paths'
-import { readJSONFile, writeJSONFile } from './generalPurposeFunctions'
+import {
+  extractRTP,
+  ensureUploadFolderExists,
+  readJSONFile,
+  writeJSONFile
+} from './generalPurposeFunctions'
 import { createGameFolder } from './gameFolders'
 import { checkGameIcons } from './readFolderData'
 import { deleteGameCodes, deleteFolders } from './deleteFunctions'
@@ -90,23 +95,6 @@ async function checkIconsInBrowser() {
   iconUrls.forEach((url) => {
     shell.openExternal(url)
   })
-}
-
-function extractRTP(noGpGameCode) {
-  let lastPart = noGpGameCode[noGpGameCode.length - 1]
-  let lastTwoChars = lastPart.slice(-2)
-  Number(lastTwoChars)
-  if (lastTwoChars >= 88 && lastTwoChars <= 98) {
-    return lastTwoChars
-  }
-}
-
-async function ensureUploadFolderExists(path) {
-  try {
-    await fs.promises.access(path)
-  } catch (error) {
-    await fs.promises.mkdir(path)
-  }
 }
 
 async function readExistingGameCodes() {
@@ -224,10 +212,7 @@ async function handleGameCodes(newGameCodes) {
 /////////////////////////// IPC Handlers ///////////////////////////
 ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
   await handleGameCodes(newGameCodes)
-
-  // Create the folder links for icons
-  const json = await readJSONFile(JSON_PATH)
-  createLinks(BASE_PATH, json)
+  await createLinks(BASE_PATH)
 })
 
 ipcMain.handle('readGameCodes', async (event) => {
