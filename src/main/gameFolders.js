@@ -9,13 +9,14 @@ function createGameFolder(basePath, gameCodes) {
     const gameIniPath = path.join(gameCodePath, 'game_en.ini')
 
     const gameName = gameCode.name
+    const gameType = gameCode.type
 
     try {
       if (!fs.existsSync(gameCodePath)) {
         fs.mkdirSync(gameCodePath)
         fs.mkdirSync(iconsPath)
         fs.mkdirSync(originalPath)
-        fs.writeFileSync(gameIniPath, `type=SLOT\ntitle=${gameName}\ncontent=${gameName}`)
+        fs.writeFileSync(gameIniPath, `type=${gameType}\ntitle=${gameName}\ncontent=${gameName}`)
       }
     } catch (error) {
       console.error(`Failed to create folder or write file for game code ${gameCode.id}`)

@@ -15,8 +15,8 @@ const api = {
   openIconUrls: () => {
     return ipcRenderer.invoke('openIconUrls')
   },
-  readSymLinks: (gameCode) => {
-    return ipcRenderer.invoke('readSymLinks', gameCode)
+  editGameInfo: (id, editedValues) => {
+    ipcRenderer.send('editGameInfo', id, editedValues)
   }
 }
 

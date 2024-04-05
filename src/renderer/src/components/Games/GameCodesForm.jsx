@@ -3,7 +3,7 @@ import { useUploadFolder } from '../../contexts/UploadFolderContext'
 
 const GameCodesForm = () => {
   const [gameCodes, setGameCodes] = useState('')
-  const { storeGameCodes, readGameCodes, checkIconsInBrowser } = useUploadFolder()
+  const { storeGameCodes, checkIconsInBrowser } = useUploadFolder()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -19,7 +19,6 @@ const GameCodesForm = () => {
 
       // // store the cleaned up codes array
       await storeGameCodes(codesArray)
-      await readGameCodes()
       setGameCodes('')
     } catch (error) {
       console.error('Error submitting game codes', error)

@@ -1,10 +1,10 @@
 import fs from 'fs'
-import { JSON_PATH } from './paths'
+import { BASE_PATH, JSON_PATH } from './paths'
 import { readJSONFile } from './generalPurposeFunctions'
 
-const createLinks = async (path) => {
+const createFolderLinks = async () => {
   // Create the icons.txt file if it doesn't exist
-  if (!fs.existsSync(`${path}/icons.txt`)) fs.writeFileSync(`${path}/icons.txt`, '')
+  if (!fs.existsSync(`${BASE_PATH}/icons.txt`)) fs.writeFileSync(`${BASE_PATH}/icons.txt`, '')
   const json = await readJSONFile(JSON_PATH)
   let fileContent = ''
 
@@ -33,7 +33,7 @@ const createLinks = async (path) => {
     fileContent += '\n'
   })
 
-  fs.writeFileSync(`${path}/icons.txt`, fileContent)
+  fs.writeFileSync(`${BASE_PATH}/icons.txt`, fileContent)
 }
 
-export default createLinks
+export default createFolderLinks
