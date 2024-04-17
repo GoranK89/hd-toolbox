@@ -12,7 +12,7 @@ import {
 import { createGameFolder } from './gameFolders'
 import { checkGameIcons } from './readFolderData'
 import { deleteGameCodes, deleteFolders } from './deleteFunctions'
-import createLinks from './generateIconLinks'
+import createFolderLinks from './generateIconLinks'
 import specialGameProviders from './specialGameProviders'
 import icon from '../../resources/icon.png?asset'
 
@@ -145,14 +145,26 @@ function processGameCode(newGameCode, existingGameCodes) {
 
   // if game code is PP_GAME_90, pop number to compare with gamecode.name
   if (gameCodeRTP) noGpGameCodeArray.pop()
-  const noGpNoRTPGameCode = noGpGameCodeArray
-    .join(' ')
-    .toLowerCase()
-    .split(' ')
-    .map((word) => word.charAt(0).toUpperCase() + word.substring(1))
-    .join(' ')
-  const existingGameCode = existingGameCodes.find((gameCode) => gameCode.name === noGpNoRTPGameCode)
-  if (existingGameCode && !existingGameCode.similarGames.includes(newGameCode)) {
+  // const noGpNoRTPGameCode = noGpGameCodeArray
+  //   .join(' ')
+  //   .toLowerCase()
+  //   .split(' ')
+  //   .map((word) => word.charAt(0).toUpperCase() + word.substring(1))
+  //   .join(' ')
+  // 1. no gp no rtp game code
+  const noGpNoRTPGameCode = noGpGameCodeArray.join('_')
+
+  const existingGameCode = existingGameCodes?.find((gameCode) => {
+    let noGpId = gameCode.id.split('_')
+    noGpId = noGpId.slice(1).join('_')
+    return noGpId === noGpNoRTPGameCode
+  })
+
+  if (
+    existingGameCode &&
+    existingGameCode?.id !== newGameCode &&
+    !existingGameCode?.similarGames.includes(newGameCode)
+  ) {
     existingGameCode.similarGames.push(newGameCode)
     existingGameCode.symlinks.push(
       `symlinks[]=${gameProvider}/${newGameCode},${gameProvider}/${existingGameCode.id}`
@@ -161,11 +173,15 @@ function processGameCode(newGameCode, existingGameCodes) {
   }
 
   // if game code is not present in JSON, add it else log the duplicate
-  if (!existingGameCodes.some((gameCode) => gameCode.id === newGameCode)) {
+  if (
+    !existingGameCodes.some((gameCode) => gameCode.id === newGameCode) &&
+    !existingGameCodes.some((gameCode) => gameCode.similarGames.includes(newGameCode))
+  ) {
     existingGameCodes.push({
       id: newGameCode,
       name: noGpNoRTPGameCode,
       provider: gameProvider,
+      type: 'SLOT',
       similarGames: [],
       iconsExist: false,
       folderLink: `games[]=${gameProvider}/${newGameCode}`,
@@ -212,7 +228,7 @@ async function handleGameCodes(newGameCodes) {
 /////////////////////////// IPC Handlers ///////////////////////////
 ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
   await handleGameCodes(newGameCodes)
-  await createLinks(BASE_PATH)
+  await createFolderLinks()
 })
 
 ipcMain.handle('readGameCodes', async (event) => {
@@ -231,10 +247,21 @@ ipcMain.on('deleteGameCodes', async (event, gameCodesToDelete) => {
     deleteFolders(gameCodesToDelete)
 
     // read the game codes from JSON and regenerate icons txt file
-    const json = await readJSONFile(JSON_PATH)
-    createLinks(BASE_PATH, json)
+    await createFolderLinks()
   } catch (error) {
     console.error(`Failed to handle 'deleteGameCodes':`, error)
+  }
+})
+
+// after the change identical game codes get added to similar games
+ipcMain.on('editGameInfo', async (event, id, editedValues) => {
+  try {
+    let gameCodes = await readJSONFile(JSON_PATH)
+    let gameCodeIndex = gameCodes.findIndex((gameCode) => gameCode.id === id)
+    gameCodes[gameCodeIndex] = { ...gameCodes[gameCodeIndex], ...editedValues }
+    await writeJSONFile(JSON_PATH, gameCodes)
+  } catch (error) {
+    console.error(`Failed to handle 'editGameInfo':`, error)
   }
 })
 
