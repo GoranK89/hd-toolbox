@@ -9,7 +9,7 @@ import {
   readJSONFile,
   writeJSONFile
 } from './generalPurposeFunctions'
-import { createGameFolder } from './gameFolders'
+import { createGameFolder, editGameIniFile } from './gameFolders'
 import { checkGameIcons } from './readFolderData'
 import { deleteGameCodes, deleteFolders } from './deleteFunctions'
 import createFolderLinks from './generateIconLinks'
@@ -145,14 +145,13 @@ function processGameCode(newGameCode, existingGameCodes) {
 
   // if game code is PP_GAME_90, pop number to compare with gamecode.name
   if (gameCodeRTP) noGpGameCodeArray.pop()
-  // const noGpNoRTPGameCode = noGpGameCodeArray
-  //   .join(' ')
-  //   .toLowerCase()
-  //   .split(' ')
-  //   .map((word) => word.charAt(0).toUpperCase() + word.substring(1))
-  //   .join(' ')
-  // 1. no gp no rtp game code
   const noGpNoRTPGameCode = noGpGameCodeArray.join('_')
+  // just formated for the game name purposes
+  const noGpNoRTPGameCodeFormated = noGpGameCodeArray
+    .join('_')
+    .split('_')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
 
   const existingGameCode = existingGameCodes?.find((gameCode) => {
     let noGpId = gameCode.id.split('_')
@@ -179,7 +178,7 @@ function processGameCode(newGameCode, existingGameCodes) {
   ) {
     existingGameCodes.push({
       id: newGameCode,
-      name: noGpNoRTPGameCode,
+      name: noGpNoRTPGameCodeFormated,
       provider: gameProvider,
       type: 'SLOT',
       similarGames: [],
@@ -200,7 +199,7 @@ async function storeGameCodes(gameCodes) {
 
 async function createGameFolders() {
   const gameCodesJson = await readJSONFile(JSON_PATH)
-  createGameFolder(BASE_PATH, gameCodesJson)
+  createGameFolder(gameCodesJson)
 }
 
 // Receives new game codes, reads existing game codes, processes/compares them and stores them in JSON, creates according folders
@@ -259,6 +258,11 @@ ipcMain.on('editGameInfo', async (event, id, editedValues) => {
     let gameCodes = await readJSONFile(JSON_PATH)
     let gameCodeIndex = gameCodes.findIndex((gameCode) => gameCode.id === id)
     gameCodes[gameCodeIndex] = { ...gameCodes[gameCodeIndex], ...editedValues }
+    editGameIniFile(
+      gameCodes[gameCodeIndex].id,
+      gameCodes[gameCodeIndex].type,
+      gameCodes[gameCodeIndex].name
+    )
     await writeJSONFile(JSON_PATH, gameCodes)
   } catch (error) {
     console.error(`Failed to handle 'editGameInfo':`, error)

@@ -1,9 +1,10 @@
 import fs from 'fs'
 import path from 'path'
+import { BASE_PATH } from './paths'
 
-function createGameFolder(basePath, gameCodes) {
+function createGameFolder(gameCodes) {
   gameCodes.forEach((gameCode) => {
-    const gameCodePath = path.join(basePath, gameCode.id)
+    const gameCodePath = path.join(BASE_PATH, gameCode.id)
     const iconsPath = path.join(gameCodePath, 'launch')
     const originalPath = path.join(gameCodePath, 'original')
     const gameIniPath = path.join(gameCodePath, 'game_en.ini')
@@ -24,4 +25,12 @@ function createGameFolder(basePath, gameCodes) {
   })
 }
 
-export { createGameFolder }
+function editGameIniFile(gameCode, gameType, gameName) {
+  const gameCodePath = path.join(BASE_PATH, gameCode)
+  const gameIniPath = path.join(gameCodePath, 'game_en.ini')
+  // delete previous game_en.ini file
+  fs.unlinkSync(gameIniPath)
+  fs.writeFileSync(gameIniPath, `type=${gameType}\ntitle=${gameName}\ncontent=${gameName}`)
+}
+
+export { createGameFolder, editGameIniFile }
