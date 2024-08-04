@@ -1,9 +1,10 @@
 .games-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex-grow: 1;
   height: 100vh;
   padding: 2rem;
-  display: flex;
-  flex-grow: 1;
-  gap: 5rem;
+  gap: 1rem;
   background-image: url('../../../src/assets/backgroundMuted.png');
   background-position: center;
   background-repeat: no-repeat;
@@ -89,8 +90,8 @@
   .generated-folders {
     display: flex;
     flex-direction: column;
-    height: 500px; // Adjust this value as needed
-    overflow-y: auto;
+    height: auto; // Adjust this value as needed
+    overflow: auto;
     flex: 9;
     gap: 1rem;
     padding: 1rem;
@@ -114,13 +115,11 @@
     }
 
     &__container {
-      position: relative;
       display: flex;
       justify-content: space-between;
       align-items: center;
       color: $color-blue-dark;
       padding: 1rem;
-      gap: 1rem;
       border-radius: 1rem;
       background-color: rgba(244, 243, 231, 0.4);
       backdrop-filter: blur(3px);
@@ -129,59 +128,12 @@
       &-description {
         display: flex;
         flex-direction: column;
-        gap: 0.3rem;
+        align-items: flex-start;
+        overflow: auto;
+        gap: 0.4rem;
 
-        span {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-
-          h2 {
-            font-size: 2rem;
-          }
-
-          a {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 4px;
-            border-radius: 5px;
-            background-color: $color-light-blue;
-            color: $dirtyWhite;
-
-            &:hover {
-              background-color: $color-blue-dark;
-            }
-          }
-        }
-
-        .modal {
-          position: absolute;
-          top: 0;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          color: #fff;
-          z-index: 99;
-          padding: 1rem;
-          border-radius: 1rem;
-
-          background-color: rgba(49, 45, 78, 0.9);
-          backdrop-filter: blur(15px);
-
-          &__title {
-            display: flex;
-            justify-content: space-between;
-
-            button {
-              display: flex;
-              padding: 3px;
-              font-size: 1.4rem;
-            }
-          }
-
-          overflow-y: auto;
-          overflow-x: auto;
+        h2 {
+          font-size: 1.8rem;
         }
 
         .icons-ok,

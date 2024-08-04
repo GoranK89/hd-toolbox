@@ -20,14 +20,11 @@ function reducer(state, action) {
 function UploadFolderProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  // calls the main process to store the game codes, create folders and also receive folder contents
+  // calls the main process to store the game codes, create folders
   async function storeGameCodes(gameCodes) {
     await window.api.storeGameCodes(gameCodes)
-  }
-
-  async function readGameCodes() {
-    const gameCodes = await window.api.readGameCodes()
-    dispatch({ type: 'foldersRead', payload: gameCodes })
+    // cant find a better way to update state immediately for now...
+    setTimeout(readFolders, 1000)
   }
 
   // calls the main process to delete the folder, then updates the state
@@ -36,13 +33,41 @@ function UploadFolderProvider({ children }) {
     dispatch({ type: 'folderDelete', payload: folderName })
   }
 
+  async function readFolders() {
+    const gameCodes = await window.api.readGameCodes()
+
+    const stateIds = state.map((game) => game.id)
+    const gameCodeIds = gameCodes.map((game) => game.id)
+
+    console.log(stateIds, gameCodeIds)
+
+    const isDifferent =
+      gameCodeIds.some((id) => !stateIds.includes(id)) ||
+      stateIds.some((id) => !gameCodeIds.includes(id))
+
+    if (isDifferent) {
+      dispatch({ type: 'foldersRead', payload: gameCodes })
+    }
+  }
+
   async function checkIconsInBrowser() {
     await window.api.openIconUrls()
   }
 
+  async function editGameInfo(id, editedValues) {
+    await window.api.editGameInfo(id, editedValues)
+  }
+
   return (
     <UploadFolderContext.Provider
-      value={{ state, storeGameCodes, readGameCodes, deleteFolder, checkIconsInBrowser }}
+      value={{
+        state,
+        storeGameCodes,
+        deleteFolder,
+        readFolders,
+        checkIconsInBrowser,
+        editGameInfo
+      }}
     >
       {children}
     </UploadFolderContext.Provider>

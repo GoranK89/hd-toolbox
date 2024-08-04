@@ -7,23 +7,18 @@ function Navbar() {
         <div>HD Toolbox</div>
       </li>
       <li>
-        <NavLink end className="navbar__item" to="dashboard">
-          Dashboard
-        </NavLink>
-      </li>
-      <li>
         <NavLink className="navbar__item" to="games">
           Games
         </NavLink>
       </li>
       <li>
         <NavLink className="navbar__item" to="gameCodes">
-          Game Codes
+          Generate Codes
         </NavLink>
       </li>
       <li>
-        <NavLink className="navbar__item" to="weeklyReport">
-          Weekly Report
+        <NavLink className="navbar__item" to="taskHelper">
+          Task Helper
         </NavLink>
       </li>
     </ul>
