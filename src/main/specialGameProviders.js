@@ -9,6 +9,8 @@ const specialGameProviders = [
   'EVOLDM',
   'FAZI',
   'FAZIM',
+  'GART',
+  'GARTM',
   'MGSD',
   'MGSM',
   'NETEE',

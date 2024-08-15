@@ -155,6 +155,7 @@ function processGameCode(newGameCode, existingGameCodes) {
 
   const existingGameCode = existingGameCodes?.find((gameCode) => {
     let noGpId = gameCode.id.split('_')
+    noGpId.pop()
     noGpId = noGpId.slice(1).join('_')
     return noGpId === noGpNoRTPGameCode
   })
@@ -189,7 +190,6 @@ function processGameCode(newGameCode, existingGameCodes) {
   } else {
     console.log(`Duplicate game code: ${newGameCode}`)
   }
-
   return existingGameCodes
 }
 
