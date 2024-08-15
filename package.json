@@ -45,6 +45,7 @@
     "files": [
       "dist/**/*",
       "node_modules/**/*",
+      "src/renderer/src/assets/**/*",
       "package.json"
     ],
     "directories": {
