@@ -20,7 +20,7 @@ function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
-    height: 670,
+    height: 700,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
@@ -155,7 +155,10 @@ function processGameCode(newGameCode, existingGameCodes) {
 
   const existingGameCode = existingGameCodes?.find((gameCode) => {
     let noGpId = gameCode.id.split('_')
-    noGpId.pop()
+    // if last element is a number (between 87 and 99), remove it
+    Number(noGpId[noGpId.length - 1]) > 87 && Number(noGpId[noGpId.length - 1]) < 99
+      ? noGpId.pop()
+      : null
     noGpId = noGpId.slice(1).join('_')
     return noGpId === noGpNoRTPGameCode
   })
