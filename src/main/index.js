@@ -19,7 +19,7 @@ import icon from '../../resources/icon.png?asset'
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
+    width: 1000,
     height: 700,
     show: false,
     autoHideMenuBar: true,
@@ -155,10 +155,12 @@ function processGameCode(newGameCode, existingGameCodes) {
 
   const existingGameCode = existingGameCodes?.find((gameCode) => {
     let noGpId = gameCode.id.split('_')
-    // if last element is a number (between 87 and 99), remove it
-    Number(noGpId[noGpId.length - 1]) > 87 && Number(noGpId[noGpId.length - 1]) < 99
-      ? noGpId.pop()
-      : null
+
+    // extract last 2 characters from the game code and convert to number
+    let lastElement = Number(noGpId[noGpId.length - 1].slice(-2))
+    // if last 2 characters are between 85 and 99, pop them
+    lastElement >= 85 && lastElement <= 99 ? noGpId.pop() : null
+
     noGpId = noGpId.slice(1).join('_')
     return noGpId === noGpNoRTPGameCode
   })

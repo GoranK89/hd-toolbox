@@ -5,7 +5,7 @@ function extractRTP(gameCode) {
   let lastPart = gameCode[gameCode.length - 1]
   let lastTwoChars = lastPart.slice(-2)
   Number(lastTwoChars)
-  if (lastTwoChars >= 88 && lastTwoChars <= 98) {
+  if (lastTwoChars >= 85 && lastTwoChars <= 99) {
     return lastTwoChars
   }
 }
