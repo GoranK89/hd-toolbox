@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 import { UploadFolderProvider } from './contexts/UploadFolderContext'
 
@@ -12,9 +12,8 @@ function App() {
     <UploadFolderProvider>
       <HashRouter>
         <Routes>
-          <Route path="/" element={<AppLayout />}>
-            <Route index path="app" element={<Games />} />
-            <Route index element={<Games replace to="games" />} />
+          <Route element={<AppLayout />}>
+            <Route index element={<Navigate replace to="games" />} />
             <Route path="games" element={<Games />} />
             <Route path="gameCodes" element={<GameCodes />} />
             <Route path="taskHelper" element={<TaskHelper />} />
