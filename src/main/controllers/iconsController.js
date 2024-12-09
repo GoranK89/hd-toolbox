@@ -1,6 +1,7 @@
 import fs from 'fs'
-import { BASE_PATH, JSON_PATH } from './paths'
-import { readJSONFile } from './generalPurposeFunctions'
+import path from 'path'
+import { BASE_PATH, JSON_PATH } from '../utils/pathUtils'
+import { readJSONFile } from '../utils/generalPurposeFunctions'
 
 const createFolderLinks = async () => {
   // Create the icons.txt file if it doesn't exist
@@ -36,4 +37,18 @@ const createFolderLinks = async () => {
   fs.writeFileSync(`${BASE_PATH}/icons.txt`, fileContent)
 }
 
-export default createFolderLinks
+// Check if icons exist in a folder
+
+const checkGameIcons = (folderName) => {
+  const uploadFolder = fs.readdirSync(BASE_PATH)
+  const folderExists = uploadFolder.includes(folderName)
+
+  if (!folderExists) return false
+
+  const launchFolderPath = path.join(BASE_PATH, folderName, 'launch')
+  const launchFolderContent = fs.readdirSync(launchFolderPath)
+  const iconExists = launchFolderContent.includes('250x157.png')
+  return iconExists
+}
+
+export { createFolderLinks, checkGameIcons }

@@ -2,17 +2,16 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import path from 'path'
 import fs from 'fs'
-import { BASE_PATH, JSON_PATH } from './paths'
+import { BASE_PATH, JSON_PATH } from './utils/pathUtils.js'
 import {
   extractRTP,
   ensureUploadFolderExists,
   readJSONFile,
   writeJSONFile
-} from './generalPurposeFunctions'
-import { createGameFolder, editGameIniFile } from './gameFolders'
-import { checkGameIcons } from './readFolderData'
-import { deleteGameCodes, deleteFolders } from './deleteFunctions'
-import createFolderLinks from './generateIconLinks'
+} from './utils/generalPurposeFunctions.js'
+import { createGameFolder, editGameIniFile } from './controllers/fileController.js'
+import { checkGameIcons, createFolderLinks } from './controllers/iconsController.js'
+import { deleteGameCodes, deleteFolders } from './controllers/deleteController.js'
 import specialGameProviders from './specialGameProviders'
 import icon from '../../resources/icon.png?asset'
 

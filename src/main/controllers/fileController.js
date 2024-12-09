@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { BASE_PATH } from './paths'
+import { BASE_PATH } from '../utils/pathUtils'
 
 function createGameFolder(gameCodes) {
   gameCodes.forEach((gameCode) => {

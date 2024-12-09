@@ -1,13 +1,12 @@
 import fs from 'fs'
 import path from 'path'
-import { BASE_PATH, JSON_PATH } from './paths'
-import { readJSONFile, writeJSONFile } from './generalPurposeFunctions'
+import { BASE_PATH, JSON_PATH } from '../utils/pathUtils'
+import { readJSONFile, writeJSONFile } from '../utils/generalPurposeFunctions'
 
 const deleteGameCodes = async (gameCodesToDelete) => {
   // Read the game codes from JSON
-
   let gameCodes = await readJSONFile(JSON_PATH)
-  // Fiter out the game codes to delete
+  // Fiter
   const filteredGameCodes = gameCodes.filter((gameCode) => !gameCodesToDelete.includes(gameCode.id))
 
   // Write the filtered game codes to JSON file

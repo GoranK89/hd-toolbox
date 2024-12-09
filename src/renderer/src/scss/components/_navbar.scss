@@ -11,6 +11,8 @@
 
   &__item {
     display: flex;
+    align-items: center;
+    gap: 0.4rem;
     padding: 0.5rem 1rem;
     border-radius: 1rem;
     cursor: pointer;

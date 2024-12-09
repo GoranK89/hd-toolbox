@@ -1,10 +1,7 @@
 const specialGameProviders = [
-  'AMATIC',
-  'AMATICM',
   'BOOMING',
   'BOOMINGM',
   'EGT',
-  'EGTM',
   'EVOLD',
   'EVOLDM',
   'FAZI',

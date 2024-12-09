@@ -46,11 +46,15 @@ const GeneratedFolders = () => {
                   value={editedValues[item.id]?.name || item.name}
                   onChange={(e) => handleInputChange(item.id, 'name', e.target.value)}
                 />
-                <input
-                  type="text"
+                <select
                   value={editedValues[item.id]?.type || item.type}
                   onChange={(e) => handleInputChange(item.id, 'type', e.target.value)}
-                />
+                >
+                  <option value="SLOT">SLOT</option>
+                  <option value="SIMPLE">SIMPLE</option>
+                  <option value="CARD">CARD</option>
+                  <option value="TABLE">TABLE</option>
+                </select>
                 <button onClick={() => handleSave(item.id)}>SAVE</button>
               </>
             ) : (

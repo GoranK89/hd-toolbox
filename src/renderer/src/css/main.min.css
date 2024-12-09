@@ -63,6 +63,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .navbar__item {
   display: flex;
+  align-items: center;
+  gap: 0.4rem;
   padding: 0.5rem 1rem;
   border-radius: 1rem;
   cursor: pointer;
@@ -86,7 +88,6 @@ input[type=number]::-webkit-outer-spin-button {
   height: 100vh;
   padding: 2rem;
   gap: 1rem;
-  background-image: url("../../../src/assets/backgroundMuted.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -244,7 +245,10 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .app-layout {
-  display: flex;
+  display: grid;
+  grid-template-columns: 20rem 1fr;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
 }
 
 .dashboard {

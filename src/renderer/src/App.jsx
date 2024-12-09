@@ -6,6 +6,7 @@ import AppLayout from './pages/AppLayout'
 import Games from './components/Games/Games'
 import GameCodes from './components/GameCodes/GameCodes'
 import TaskHelper from './components/TaskHelper/TaskHelper'
+import Dashboard from './components/Dashboard/Dashboard'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route element={<AppLayout />}>
             <Route index element={<Navigate replace to="games" />} />
+            <Route path="dashboard" element={<Dashboard />} />
             <Route path="games" element={<Games />} />
             <Route path="gameCodes" element={<GameCodes />} />
             <Route path="taskHelper" element={<TaskHelper />} />
