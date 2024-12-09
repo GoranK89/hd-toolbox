@@ -1,5 +1,11 @@
+import Form from './Form'
+
 const GameCodes = () => {
-  return <div>GameCodes</div>
+  return (
+    <div>
+      <Form />
+    </div>
+  )
 }
 
 export default GameCodes
