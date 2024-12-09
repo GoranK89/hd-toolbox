@@ -256,15 +256,6 @@ input[type=number]::-webkit-outer-spin-button {
   flex-direction: column;
   padding: 2rem;
 }
-.dashboard .user-container {
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-}
-.dashboard .user-profile {
-  display: flex;
-  gap: 1rem;
-}
 
 /*----- GENERATOR ------*/
 .form-output-wrapper {

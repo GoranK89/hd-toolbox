@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import backgroundImage from '../../assets/backgroundMuted.png'
 
 const columnHeaders = [
   'GAME PROVIDER',
@@ -57,7 +58,7 @@ export default function TaskHelper() {
   }
 
   return (
-    <div className="task-helper-container">
+    <div className="task-helper-container" style={{ backgroundImage: `url(${backgroundImage})` }}>
       <h1>Task helper</h1>
       <textarea value={input} onChange={handleInputChange} placeholder="Paste row here" />
       <button onClick={handleButtonClick}>Clean up row</button>

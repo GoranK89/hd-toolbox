@@ -1,8 +1,9 @@
 import Form from './Form'
+import backgroundImage from '../../assets/backgroundMuted.png'
 
 const GameCodes = () => {
   return (
-    <div>
+    <div style={{ backgroundImage: `url(${backgroundImage})` }}>
       <Form />
     </div>
   )
