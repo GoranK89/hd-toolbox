@@ -1,0 +1,41 @@
+/* Base Button */
+.button {
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.6rem;
+  cursor: pointer;
+  background-size: 400% 400%;
+  transition:
+    background-position 0.5s,
+    transform 0.2s ease;
+
+  &--large {
+    padding: 1rem 2rem;
+    font-size: 1.6rem;
+  }
+
+  &--small {
+    padding: 0.5rem 1rem;
+    font-size: 1.4rem;
+  }
+
+  &--gradient-green {
+    background: linear-gradient(45deg, #1ab477, #30e6bb);
+  }
+
+  &--gradient-purple {
+    background: linear-gradient(45deg, #7b71e9, #8a81f3);
+  }
+
+  &:hover {
+    transform: translate(0, -2px);
+    background-position: right bottom;
+  }
+
+  &:active {
+    transform: translate(0, 0);
+  }
+}

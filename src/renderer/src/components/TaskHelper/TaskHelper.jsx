@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Table from './Table'
 
 export default function TaskHelper() {
   const [inputData, setInputData] = useState('')
@@ -15,11 +16,13 @@ export default function TaskHelper() {
     // 2.) filter out any columns after index 11
     const formattedRows = rows.map((row) => {
       const columns = row.split('\t')
-      return columns.slice(0, 11).filter((col, index) => index < 10 || col.trim() !== '')
+      return columns.slice(2, 14).filter((col, index) => index < 15 || col.trim() !== '')
     })
 
     setFormatedData(formattedRows)
   }
+
+  // TODO: should make a table per GP, color missing fields, exceptions per GP
 
   return (
     <div className="task-helper">
@@ -32,43 +35,16 @@ export default function TaskHelper() {
         cols="50"
         style={{ width: '100%', marginBottom: '1rem' }}
       />
-      <button onClick={processData} style={{ marginBottom: '1rem' }}>
+      <button className="button button--large button--gradient-green" onClick={processData}>
         Process Rows
       </button>
-      <div>
-        <h3>Formated game info</h3>
+      <div className="task-helper__table-container">
+        <h3>Formated table</h3>
         <p>Configure on Environments: PRODCOPY, PROD_RGS, PROD_RGHR</p>
-        <br />
         <p>
           Please enable the games for: <b>PRODCOPY, PROD_RGS, PROD_RGHR</b>
         </p>
-        <br />
-        <table>
-          <thead>
-            <tr>
-              <th>Game Name</th>
-              <th>Game ID</th>
-              <th>Game Type</th>
-              <th>Platform</th>
-              <th>Free Rounds</th>
-              <th>Module ID</th>
-              <th>CUR</th>
-              <th>MGA</th>
-              <th>DE</th>
-              <th>BE</th>
-              <th>Release Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {formatedData.map((row, rowIndex) => (
-              <tr key={rowIndex}>
-                {row.map((cell, cellIndex) => (
-                  <td key={cellIndex}>{cell}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <Table formatedData={formatedData} />
       </div>
     </div>
   )

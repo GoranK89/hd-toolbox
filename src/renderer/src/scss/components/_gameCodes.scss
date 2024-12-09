@@ -48,32 +48,6 @@ textarea {
   resize: vertical;
 }
 
-/*Button*/
-.generator__button {
-  padding: 1rem 2rem;
-  border-radius: 0.5rem;
-  border: none;
-  background: linear-gradient(45deg, #1ab477, #30e6bb);
-  color: #fff;
-  font-weight: 600;
-  font-size: 1.6rem;
-  cursor: pointer;
-
-  background-size: 400% 400%;
-  transition:
-    background-position 0.5s,
-    transform 0.2s ease;
-}
-
-.generator__button:hover {
-  transform: translate(0, -2px);
-  background-position: right bottom;
-}
-
-.generator__button:active {
-  transform: translate(0, 0);
-}
-
 /*----- OUTPUT BOX ------*/
 .generator__output {
   padding: 3rem;
@@ -91,31 +65,6 @@ textarea {
   margin-bottom: 2rem;
 }
 
-/*Button*/
-.generator__copy-button {
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  border: none;
-  background: linear-gradient(45deg, #7b71e9, #8a81f3);
-  color: #fff;
-  font-size: 1.4rem;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.generator__copy-button:hover {
-  transform: translate(0, -1px);
-}
-
-.generator__copy-button:active {
-  transform: translate(0, 0);
-}
-
-.generator__code-item--placeholder {
-  color: #a3a3a3;
-  font-style: italic;
-}
-
 /*----- BAD CODES ------*/
 .generator__bad-codes {
   grid-column: span 2;
@@ -125,4 +74,10 @@ textarea {
   margin-bottom: 2rem;
   border-radius: 0.5rem;
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.03);
+}
+
+/* Placeholder Text */
+.generator__code-item--placeholder {
+  color: #7a7676;
+  font-style: italic;
 }

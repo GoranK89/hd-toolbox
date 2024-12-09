@@ -186,7 +186,7 @@ const Form = () => {
           onChange={handleGameNamesChange}
           className="generator__textarea"
         ></textarea>
-        <button className="generator__button" type="submit">
+        <button className="button button--large button--gradient-green" type="submit">
           Generate game codes
         </button>
       </form>
