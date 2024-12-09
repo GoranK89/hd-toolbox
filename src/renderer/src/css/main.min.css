@@ -380,4 +380,34 @@ textarea {
   margin-bottom: 2rem;
   border-radius: 0.5rem;
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.03);
+}
+
+.task-helper {
+  padding: 2rem;
+}
+.task-helper h2 {
+  margin-bottom: 1rem;
+}
+.task-helper textarea {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+.task-helper button {
+  margin-bottom: 1rem;
+}
+.task-helper table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+.task-helper table th,
+.task-helper table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+.task-helper table th {
+  background-color: #f2f2f2;
+}
+.task-helper table tr {
+  border-bottom: 1px solid #ddd;
 }/*# sourceMappingURL=main.min.css.map */
