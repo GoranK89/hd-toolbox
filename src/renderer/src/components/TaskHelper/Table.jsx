@@ -1,27 +1,25 @@
-function Table({ formatedData }) {
+import { sheetHeaderCols, alwaysExcludeHeaderCols, headerMappingCols } from './sheetHeaderRow'
+
+function Table({ data }) {
+  // Filter out the columns that should be excluded
+  const filteredHeaders = sheetHeaderCols.filter(
+    (header) => !alwaysExcludeHeaderCols.includes(header)
+  )
+
   return (
     <table>
       <thead>
         <tr>
-          <th>Game Name</th>
-          <th>Game ID</th>
-          <th>Game Type</th>
-          <th>Platform</th>
-          <th>Module ID</th>
-          <th>Nekineki</th>
-          <th>Free Rounds</th>
-          <th>CUR</th>
-          <th>MGA</th>
-          <th>DE</th>
-          <th>BE</th>
-          <th>Release Date</th>
+          {filteredHeaders.map((header, index) => (
+            <th key={index}>{headerMappingCols[header] || header}</th>
+          ))}
         </tr>
       </thead>
       <tbody>
-        {formatedData?.map((row, rowIndex) => (
+        {data?.map((row, rowIndex) => (
           <tr key={rowIndex}>
-            {row.map((cell, cellIndex) => (
-              <td key={cellIndex}>{cell}</td>
+            {filteredHeaders.map((header, cellIndex) => (
+              <td key={cellIndex}>{row[sheetHeaderCols.indexOf(header)]}</td>
             ))}
           </tr>
         ))}

@@ -8,6 +8,17 @@
   grid-template-rows: auto;
   gap: 5rem;
   padding: 2rem;
+
+  select {
+    font-family: 'Roboto', sans-serif;
+    width: 100%;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #7c6fe023;
+    font-size: 1.6rem;
+
+    transition: background-color 0.2s ease; /* Add transition for hover effect */
+  }
 }
 
 .generator__form {
@@ -20,17 +31,6 @@
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.05);
   margin-bottom: 2rem;
   border-radius: 0.5rem;
-}
-
-select {
-  font-family: 'Roboto', sans-serif;
-  width: 100%;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid #7c6fe023;
-  font-size: 1.6rem;
-
-  transition: background-color 0.2s ease; /* Add transition for hover effect */
 }
 
 select:hover {
