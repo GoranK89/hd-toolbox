@@ -10,7 +10,7 @@ import {
   writeJSONFile
 } from './utils/generalPurposeFunctions.js'
 import { createGameFolder, editGameIniFile } from './controllers/fileController.js'
-import { checkGameIcons, createFolderLinks } from './controllers/iconsController.js'
+import { checkGameIcons, createFolderLinks, transferIcons } from './controllers/iconsController.js'
 import { deleteGameCodes, deleteFolders } from './controllers/deleteController.js'
 import specialGameProviders from './specialGameProviders'
 import icon from '../../resources/icon.png?asset'
@@ -226,8 +226,6 @@ async function handleGameCodes(newGameCodes) {
   await createGameFolders()
 }
 
-// write symlinks into json file
-
 /////////////////////////// IPC Handlers ///////////////////////////
 ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
   await handleGameCodes(newGameCodes)
@@ -259,6 +257,7 @@ ipcMain.on('deleteGameCodes', async (event, gameCodesToDelete) => {
 // after the change identical game codes get added to similar games
 ipcMain.on('editGameInfo', async (event, id, editedValues) => {
   try {
+    transferIcons()
     let gameCodes = await readJSONFile(JSON_PATH)
     let gameCodeIndex = gameCodes.findIndex((gameCode) => gameCode.id === id)
     gameCodes[gameCodeIndex] = { ...gameCodes[gameCodeIndex], ...editedValues }

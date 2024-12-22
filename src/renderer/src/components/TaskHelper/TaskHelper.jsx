@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { sheetHeaderCols, alwaysExcludeHeaderCols } from './sheetHeaderRow'
 import Table from './Table'
 
 export default function TaskHelper() {
@@ -34,24 +33,7 @@ export default function TaskHelper() {
     groupByGpAndRgs()
   }
 
-  // const processData = () => {
-  //   // 1.) split input by lines
-  //   const rows = inputData.split('\n')
-
-  //   // 2.) filter columns with list of excluded columns
-  //   const formattedRows = rows.map((row) => {
-  //     const columns = row.split('\t')
-  //     columns.forEach((col, i) => !col.includes(alwaysExcludeHeaderCols[i]))
-
-  //     return columns.filter(
-  //       (col, index) => !alwaysExcludeHeaderCols.includes(sheetHeaderCols[index])
-  //     )
-  //   })
-
-  //   setFormatedData(formattedRows)
-  // }
-
-  // TODO: should make a table per GP, color missing fields, exceptions per GP
+  // TODO: color missing fields, exceptions per GP
 
   return (
     <div className="task-helper">
@@ -68,14 +50,14 @@ export default function TaskHelper() {
         Process Rows
       </button>
       <div className="task-helper__table-container">
-        <h3>Formated table</h3>
-        <p>Configure on Environments: PRODCOPY, PROD_RGS, PROD_RGHR</p>
+        <h3>Formated tables</h3>
+        {/* <p>Configure on Environments: PRODCOPY, PROD_RGS, PROD_RGHR</p>
         <p>
           Please enable the games for: <b>PRODCOPY, PROD_RGS, PROD_RGHR</b>
-        </p>
+        </p> */}
         {Object.keys(formatedData).map((key) => (
           <div key={key}>
-            <h2>{key}</h2>
+            <h4>{key}</h4>
             <Table data={formatedData[key]} />
           </div>
         ))}

@@ -4,5 +4,6 @@ import path from 'path'
 const desktopPath = app.getPath('desktop')
 const BASE_PATH = path.join(desktopPath, 'New Upload')
 const JSON_PATH = path.join(BASE_PATH, 'gameCodes.json')
+const MATERIALS_PATH = path.join(desktopPath, 'materials')
 
-export { BASE_PATH, JSON_PATH }
+export { MATERIALS_PATH, BASE_PATH, JSON_PATH }
