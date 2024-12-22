@@ -3,7 +3,7 @@ import { useUploadFolder } from '../../contexts/UploadFolderContext'
 
 const GameCodesForm = () => {
   const [gameCodes, setGameCodes] = useState('')
-  const { storeGameCodes, checkIconsInBrowser } = useUploadFolder()
+  const { storeGameCodes, checkIconsInBrowser, transferIcons } = useUploadFolder()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -29,6 +29,10 @@ const GameCodesForm = () => {
     checkIconsInBrowser()
   }
 
+  function transferIconsHandler() {
+    transferIcons()
+  }
+
   return (
     <div className="form-layout">
       <form className="game-form" onSubmit={handleSubmit}>
@@ -44,6 +48,9 @@ const GameCodesForm = () => {
           Submit
         </button>
       </form>
+      <button className="btn-cdn-check" onClick={transferIconsHandler}>
+        Transfer Icons
+      </button>
       <button className="btn-cdn-check" onClick={checkCdnHandler}>
         Check CDN
       </button>

@@ -257,7 +257,6 @@ ipcMain.on('deleteGameCodes', async (event, gameCodesToDelete) => {
 // after the change identical game codes get added to similar games
 ipcMain.on('editGameInfo', async (event, id, editedValues) => {
   try {
-    transferIcons()
     let gameCodes = await readJSONFile(JSON_PATH)
     let gameCodeIndex = gameCodes.findIndex((gameCode) => gameCode.id === id)
     gameCodes[gameCodeIndex] = { ...gameCodes[gameCodeIndex], ...editedValues }
@@ -272,6 +271,15 @@ ipcMain.on('editGameInfo', async (event, id, editedValues) => {
   }
 })
 
+// copy icons from materials folder to new upload foldrs
+ipcMain.handle('transferIcons', async () => {
+  try {
+    await transferIcons()
+  } catch (error) {
+    console.error(`Failed to transfer icons: ${error}`)
+  }
+})
+
 ipcMain.handle('openIconUrls', async () => {
   try {
     await checkIconsInBrowser()
@@ -279,6 +287,4 @@ ipcMain.handle('openIconUrls', async () => {
     console.error('Error in openIconUrls:', error)
   }
 })
-
-// implement an overview of all created folders and links, which can be edited from inside the app (expandable box bellow game code - see links option)
 // connect to google sheets API to get game names and types

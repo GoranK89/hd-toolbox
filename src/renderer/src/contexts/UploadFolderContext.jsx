@@ -58,6 +58,10 @@ function UploadFolderProvider({ children }) {
     await window.api.editGameInfo(id, editedValues)
   }
 
+  async function transferIcons() {
+    await window.api.transferIcons()
+  }
+
   return (
     <UploadFolderContext.Provider
       value={{
@@ -66,7 +70,8 @@ function UploadFolderProvider({ children }) {
         deleteFolder,
         readFolders,
         checkIconsInBrowser,
-        editGameInfo
+        editGameInfo,
+        transferIcons
       }}
     >
       {children}

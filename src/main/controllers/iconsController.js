@@ -81,6 +81,10 @@ const transferIcons = async () => {
       const destinationFolder = newUploadFolders[lowerCaseFolderNames.indexOf(zipFileName)]
       const destinationPath = path.join(BASE_PATH, destinationFolder, 'launch')
 
+      // Ensure the destination folder exists
+      if (!fs.existsSync(destinationPath) || !fs.existsSync(destinationFolder))
+        console.log(`Folder ${destinationFolder} not found`)
+
       if (fs.lstatSync(filePath).isFile() && path.extname(file) === '.zip') {
         await fs
           .createReadStream(filePath)
