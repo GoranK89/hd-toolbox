@@ -18,6 +18,24 @@ async function ensureUploadFolderExists(path) {
   }
 }
 
+function handleSpecialGameProviders(gameProvider) {
+  // NOTE: so far mobile game codes all work like this, and no regular GP ends with M
+  // Remove the last letter from the game provider if it is 'M' or 'D' - needs retinking, how to store special cases
+  const gameProviderLastLetter = gameProvider[gameProvider.length - 1]
+  if (gameProviderLastLetter === 'M') {
+    gameProvider = gameProvider.slice(0, -1)
+    // the very special cases are handled bellow
+  } else if (gameProvider === 'MGSD') {
+    gameProvider = 'MGS'
+  } else if (gameProvider === 'NETEE') {
+    gameProvider = 'NETE'
+  } else if (gameProvider === 'EVOLD' || gameProvider === 'EVOLDM') {
+    gameProvider = 'EVOL'
+  }
+
+  return gameProvider
+}
+
 async function readJSONFile(path) {
   try {
     const data = await fs.promises.readFile(path, 'utf8')
@@ -42,4 +60,10 @@ async function writeJSONFile(path, data) {
   }
 }
 
-export { extractRTP, ensureUploadFolderExists, readJSONFile, writeJSONFile }
+export {
+  extractRTP,
+  ensureUploadFolderExists,
+  readJSONFile,
+  writeJSONFile,
+  handleSpecialGameProviders
+}

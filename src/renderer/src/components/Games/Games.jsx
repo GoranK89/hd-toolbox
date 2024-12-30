@@ -1,10 +1,9 @@
 import GameCodesForm from './GameCodesForm'
 import GeneratedFolders from './GeneratedFolders'
-import backgroundImage from '../../assets/backgroundMuted.png'
 
 function Games() {
   return (
-    <div className="games-grid" style={{ backgroundImage: `url(${backgroundImage})` }}>
+    <div className="games-grid">
       <GameCodesForm />
       <GeneratedFolders />
     </div>

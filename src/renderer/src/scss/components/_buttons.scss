@@ -15,6 +15,7 @@
   &--large {
     padding: 1rem 2rem;
     font-size: 1.6rem;
+    width: 100%;
   }
 
   &--small {
@@ -22,12 +23,32 @@
     font-size: 1.4rem;
   }
 
-  &--gradient-green {
-    background: linear-gradient(45deg, #1ab477, #30e6bb);
+  &--blue {
+    background: $blue;
   }
 
-  &--gradient-purple {
-    background: linear-gradient(45deg, #7b71e9, #8a81f3);
+  &--violet {
+    background: $violet;
+  }
+
+  &--blue-light {
+    background: $blue-light;
+  }
+
+  &--gradient-green {
+    background: linear-gradient(45deg, $green, $green-light);
+  }
+
+  &--gradient-orange {
+    background: linear-gradient(45deg, $orange, $orange-light);
+  }
+
+  &--gradient-violet {
+    background: linear-gradient(45deg, $violet, $violet-opaque);
+  }
+
+  &--gradient-red {
+    background: linear-gradient(45deg, $red, $red-light);
   }
 
   &:hover {

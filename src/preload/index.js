@@ -19,7 +19,7 @@ const api = {
     ipcRenderer.send('editGameInfo', id, editedValues)
   },
   transferIcons: () => {
-    return ipcRenderer.invoke('transferIcons')
+    ipcRenderer.send('transferIcons')
   }
 }
 

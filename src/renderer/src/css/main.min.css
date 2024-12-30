@@ -53,32 +53,36 @@ input[type=number]::-webkit-outer-spin-button {
 .navbar {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  height: 100vh;
+  gap: 1.6rem;
+  height: 97vh;
+  margin-left: 1rem;
+  margin-top: 1rem;
   padding: 2rem 1rem;
   font-size: 1.8rem;
-  border-right: 1px solid #abc7d3;
+  border-right: 1px solid #f2f3f8;
+  border-radius: 0 3rem 3rem 0;
   letter-spacing: 1px;
-  background-color: #d4e5e5;
+  background-color: #f2f3f8;
 }
 .navbar__item {
   display: flex;
   align-items: center;
+  cursor: pointer;
   gap: 0.6rem;
   padding: 0.5rem 1rem;
   border-radius: 1rem;
-  cursor: pointer;
-  color: #228290;
+  color: #606266;
   transition: color 0.3s ease-in-out;
 }
 .navbar__item:hover,
 .navbar__item .active {
-  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.5), #228290), radial-gradient(circle at right, rgba(255, 255, 255, 0.5), #228290), #228290;
-  color: #fff;
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.5), #695cb6), radial-gradient(circle at right, rgba(255, 255, 255, 0.5), #695cb6), #695cb6;
+  color: #ffffff;
 }
 .navbar .active {
-  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.5), #228290), radial-gradient(circle at right, rgba(255, 255, 255, 0.5), #228290), #228290;
-  color: #fff;
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.5), #695cb6), radial-gradient(circle at right, rgba(255, 255, 255, 0.5), #695cb6), #695cb6;
+  color: #ffffff;
+  box-shadow: 1px 3px 5px rgba(105, 92, 182, 0.3882352941);
 }
 
 .games-grid {
@@ -88,36 +92,20 @@ input[type=number]::-webkit-outer-spin-button {
   height: 100vh;
   padding: 2rem;
   gap: 1rem;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  background-color: #ffffff;
 }
 .games-grid .form-layout {
   display: flex;
   flex-direction: column;
+  gap: 1rem;
   padding: 2rem;
-}
-.games-grid .form-layout .btn-cdn-check {
-  cursor: pointer;
-  width: 100%;
-  height: 3rem;
-  border: none;
-  outline: none;
-  background-color: #8a556f;
-  color: #f8f8f8;
-  transition: background-color 0.3s ease-in-out;
-  font-size: 1.6rem;
-  font-weight: 600;
-  border-radius: 5px;
-}
-.games-grid .form-layout .btn-cdn-check:hover {
-  background-color: #bbb7d5;
 }
 .games-grid .game-form {
   display: flex;
   flex: 10;
   flex-direction: column;
   align-items: flex-start;
+  gap: 1rem;
   height: 100%;
 }
 .games-grid .game-form__textarea {
@@ -126,44 +114,23 @@ input[type=number]::-webkit-outer-spin-button {
   font-family: "Roboto", sans-serif;
   font-weight: 600;
   resize: none;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  color: #312d4e;
+  color: #606266;
   outline: none;
   font-size: 1.6rem;
   padding: 1rem;
   margin-bottom: 1rem;
-  border-radius: 5px;
-  background-color: rgba(132, 159, 188, 0.4);
-  -webkit-backdrop-filter: blur(3px);
-          backdrop-filter: blur(3px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 1rem;
 }
 .games-grid .game-form__textarea::-moz-placeholder {
-  color: #312d4e;
+  color: #606266;
   font-weight: 400;
 }
 .games-grid .game-form__textarea::placeholder {
-  color: #312d4e;
+  color: #606266;
   font-weight: 400;
 }
 .games-grid .game-form__textarea:focus {
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-}
-.games-grid .game-form__submit-button {
-  cursor: pointer;
-  width: 100%;
-  height: 3rem;
-  border: none;
-  outline: none;
-  background-color: #312d4e;
-  color: #f8f8f8;
-  transition: background-color 0.3s ease-in-out;
-  font-size: 1.6rem;
-  font-weight: 600;
-  border-radius: 5px;
-}
-.games-grid .game-form__submit-button:hover {
-  background-color: #d4e5e5;
+  box-shadow: 0 3px 10px #eeb49a;
 }
 .games-grid .generated-folders {
   display: flex;
@@ -171,7 +138,7 @@ input[type=number]::-webkit-outer-spin-button {
   height: auto;
   overflow: auto;
   flex: 9;
-  gap: 1rem;
+  gap: 2rem;
   padding: 1rem;
 }
 .games-grid .generated-folders::-webkit-scrollbar {
@@ -191,13 +158,10 @@ input[type=number]::-webkit-outer-spin-button {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #312d4e;
+  color: #606266;
   padding: 1rem;
   border-radius: 1rem;
-  background-color: rgba(244, 243, 231, 0.4);
-  -webkit-backdrop-filter: blur(3px);
-          backdrop-filter: blur(3px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 7px rgba(0, 0, 0, 0.2);
 }
 .games-grid .generated-folders__container-description {
   display: flex;
@@ -205,6 +169,7 @@ input[type=number]::-webkit-outer-spin-button {
   align-items: flex-start;
   overflow: auto;
   gap: 0.4rem;
+  padding-bottom: 1.5rem;
 }
 .games-grid .generated-folders__container-description h2 {
   font-size: 1.8rem;
@@ -226,22 +191,10 @@ input[type=number]::-webkit-outer-spin-button {
   transform: translateY(-50%);
 }
 .games-grid .generated-folders__container-description .icons-ok::after {
-  background-color: #6c9575;
+  background-color: #0ad673;
 }
 .games-grid .generated-folders__container-description .icons-check::after {
-  background-color: #fbc02d;
-}
-.games-grid .generated-folders__container .btn-delete {
-  background-color: #e57373;
-  color: #ffffff;
-  border: none;
-  outline: none;
-  padding: 0.8rem;
-  border-radius: 5px;
-  cursor: pointer;
-}
-.games-grid .generated-folders__container .btn-delete:hover {
-  background-color: rgba(229, 115, 115, 0.5568627451);
+  background-color: #fa7e5e;
 }
 
 .app-layout {
@@ -395,16 +348,32 @@ textarea {
 .button--large {
   padding: 1rem 2rem;
   font-size: 1.6rem;
+  width: 100%;
 }
 .button--small {
   padding: 0.5rem 1rem;
   font-size: 1.4rem;
 }
-.button--gradient-green {
-  background: linear-gradient(45deg, #1ab477, #30e6bb);
+.button--blue {
+  background: #4a90e2;
 }
-.button--gradient-purple {
-  background: linear-gradient(45deg, #7b71e9, #8a81f3);
+.button--violet {
+  background: #695cb6;
+}
+.button--blue-light {
+  background: #b0d4ff;
+}
+.button--gradient-green {
+  background: linear-gradient(45deg, #0ad673, #30ec92);
+}
+.button--gradient-orange {
+  background: linear-gradient(45deg, #fa7e5e, #eeb49a);
+}
+.button--gradient-violet {
+  background: linear-gradient(45deg, #695cb6, rgba(105, 92, 182, 0.3882352941));
+}
+.button--gradient-red {
+  background: linear-gradient(45deg, #fa1d21, #f85c5f);
 }
 .button:hover {
   transform: translate(0, -2px);

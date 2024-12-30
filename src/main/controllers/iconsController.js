@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { BASE_PATH, JSON_PATH, MATERIALS_PATH } from '../utils/pathUtils'
 import { readJSONFile } from '../utils/generalPurposeFunctions'
+import { shell } from 'electron'
 const unzipper = require('unzipper')
 
 const createFolderLinks = async () => {
@@ -82,8 +83,9 @@ const transferIcons = async () => {
       const destinationPath = path.join(BASE_PATH, destinationFolder, 'launch')
 
       // Ensure the destination folder exists
-      if (!fs.existsSync(destinationPath) || !fs.existsSync(destinationFolder))
-        console.log(`Folder ${destinationFolder} not found`)
+      if (!fs.existsSync(destinationPath)) console.log(`Folder ${destinationFolder} not found`)
+      if (!fs.existsSync(destinationFolder))
+        console.log(`Folder ${destinationFolder} already has icons`)
 
       if (fs.lstatSync(filePath).isFile() && path.extname(file) === '.zip') {
         await fs
@@ -106,6 +108,12 @@ const transferIcons = async () => {
   }
 }
 
+// send image paths to frontend
+const getImagePaths = () => {
+  const newUploadContent = fs.readdirSync(BASE_PATH)
+  const newUploadfolders = newUploadContent.filter((folder) => !folder.includes('.'))
+}
+
 // Check if icons exist in a folder
 const checkGameIcons = (folderName) => {
   const uploadFolder = fs.readdirSync(BASE_PATH)
@@ -119,4 +127,19 @@ const checkGameIcons = (folderName) => {
   return iconExists
 }
 
-export { createFolderLinks, checkGameIcons, transferIcons }
+const checkIconsInBrowser = async () => {
+  if (!fs.existsSync) return
+  const gameCodes = await readJSONFile(JSON_PATH)
+  const iconUrls = gameCodes.flatMap((gameCode) => [
+    `https://cdn.oryxgaming.com/medialib/${gameCode.id}/launch/250x157.png`,
+    ...gameCode.similarGames.map(
+      (similarGame) => `https://cdn.oryxgaming.com/medialib/${similarGame}/launch/250x157.png`
+    )
+  ])
+
+  iconUrls.forEach((url) => {
+    shell.openExternal(url)
+  })
+}
+
+export { createFolderLinks, checkGameIcons, transferIcons, getImagePaths, checkIconsInBrowser }

@@ -1,4 +1,4 @@
-import { FaTrash, FaExternalLinkAlt, FaTimes } from 'react-icons/fa'
+import { FaTrash } from 'react-icons/fa'
 import { useUploadFolder } from '../../contexts/UploadFolderContext'
 import { useEffect, useState } from 'react'
 
@@ -55,13 +55,23 @@ const GeneratedFolders = () => {
                   <option value="CARD">CARD</option>
                   <option value="TABLE">TABLE</option>
                 </select>
-                <button onClick={() => handleSave(item.id)}>SAVE</button>
+                <button
+                  className="button button--small button--violet-light"
+                  onClick={() => handleSave(item.id)}
+                >
+                  SAVE
+                </button>
               </>
             ) : (
               <>
                 <p>{item.name}</p>
                 <p>{item.type}</p>
-                <button onClick={() => handleEdit(item.id)}>EDIT</button>
+                <button
+                  className="button button--small button--gradient-violet"
+                  onClick={() => handleEdit(item.id)}
+                >
+                  EDIT
+                </button>
               </>
             )}
 
@@ -69,7 +79,10 @@ const GeneratedFolders = () => {
               {item.iconsExist ? 'Icons OK' : 'Icons missing'}
             </p>
           </div>
-          <button className="btn-delete" onClick={() => deleteFolder(item.id)}>
+          <button
+            className="button button--small button--gradient-red"
+            onClick={() => deleteFolder(item.id)}
+          >
             <FaTrash />
           </button>
         </div>

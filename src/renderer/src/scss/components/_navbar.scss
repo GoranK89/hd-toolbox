@@ -1,37 +1,40 @@
 .navbar {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  height: 100vh;
+  gap: 1.6rem;
+  height: 97vh;
+  margin-left: 1rem;
+  margin-top: 1rem;
   padding: 2rem 1rem;
   font-size: 1.8rem;
-  border-right: 1px solid $color-sky-blue;
+  border-right: 1px solid $pink-light;
+  border-radius: 0 3rem 3rem 0;
   letter-spacing: 1px;
-  background-color: $color-light-blue;
+  background-color: $pink-light;
 
   &__item {
     display: flex;
     align-items: center;
+    cursor: pointer;
     gap: 0.6rem;
     padding: 0.5rem 1rem;
     border-radius: 1rem;
-    cursor: pointer;
-    color: $color-ocean-blue;
+    color: $gray-dark;
     transition: color 0.3s ease-in-out;
 
     &:hover,
     .active {
-      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.5), $color-ocean-blue),
-        radial-gradient(circle at right, rgba(255, 255, 255, 0.5), $color-ocean-blue),
-        $color-ocean-blue;
-      color: $color-white;
+      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.5), $violet),
+        radial-gradient(circle at right, rgba(255, 255, 255, 0.5), $violet), $violet;
+      color: $white;
     }
   }
 
   .active {
-    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.5), $color-ocean-blue),
-      radial-gradient(circle at right, rgba(255, 255, 255, 0.5), $color-ocean-blue),
-      $color-ocean-blue;
-    color: $color-white;
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.5), $violet),
+      radial-gradient(circle at right, rgba(255, 255, 255, 0.5), $violet), $violet;
+    color: $white;
+
+    box-shadow: 1px 3px 5px $violet-opaque;
   }
 }

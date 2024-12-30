@@ -39,8 +39,6 @@ function UploadFolderProvider({ children }) {
     const stateIds = state.map((game) => game.id)
     const gameCodeIds = gameCodes.map((game) => game.id)
 
-    console.log(stateIds, gameCodeIds)
-
     const isDifferent =
       gameCodeIds.some((id) => !stateIds.includes(id)) ||
       stateIds.some((id) => !gameCodeIds.includes(id))

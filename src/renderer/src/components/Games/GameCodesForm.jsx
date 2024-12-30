@@ -44,14 +44,14 @@ const GameCodesForm = () => {
           rows="10"
           cols="30"
         />
-        <button className="game-form__submit-button" type="submit">
+        <button className="button button--large button--gradient-green" type="submit">
           Submit
         </button>
+        <button className="button button--large button--violet" onClick={transferIconsHandler}>
+          Move Icons
+        </button>
       </form>
-      <button className="btn-cdn-check" onClick={transferIconsHandler}>
-        Transfer Icons
-      </button>
-      <button className="btn-cdn-check" onClick={checkCdnHandler}>
+      <button className="button button--large button--gradient-orange" onClick={checkCdnHandler}>
         Check CDN
       </button>
     </div>

@@ -1,7 +1,9 @@
-import backgroundImage from '../../assets/backgroundMuted.png'
-
 function Dashboard() {
-  return <div style={{ backgroundImage: `url(${backgroundImage})` }}>Dashboard</div>
+  return (
+    <div>
+      <h2>Game Icons Status</h2>
+    </div>
+  )
 }
 
 export default Dashboard
