@@ -7,10 +7,9 @@
   margin-top: 1rem;
   padding: 2rem 1rem;
   font-size: 1.8rem;
-  border-right: 1px solid $pink-light;
+  background-color: $neutral-light;
   border-radius: 0 3rem 3rem 0;
   letter-spacing: 1px;
-  background-color: $pink-light;
 
   &__item {
     display: flex;
@@ -19,22 +18,22 @@
     gap: 0.6rem;
     padding: 0.5rem 1rem;
     border-radius: 1rem;
-    color: $gray-dark;
+    color: $text;
     transition: color 0.3s ease-in-out;
 
     &:hover,
     .active {
-      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.5), $violet),
-        radial-gradient(circle at right, rgba(255, 255, 255, 0.5), $violet), $violet;
-      color: $white;
+      background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.5), $accent),
+        radial-gradient(circle at left, rgba(255, 255, 255, 0.5), $accent), $accent;
+      color: $background;
     }
   }
 
   .active {
-    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.5), $violet),
-      radial-gradient(circle at right, rgba(255, 255, 255, 0.5), $violet), $violet;
-    color: $white;
+    background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.5), $accent),
+      radial-gradient(circle at left, rgba(255, 255, 255, 0.5), $accent), $accent;
+    color: $background;
 
-    box-shadow: 1px 3px 5px $violet-opaque;
+    box-shadow: 4px 1px 40px -13px $accent-light;
   }
 }

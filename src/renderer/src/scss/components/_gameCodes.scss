@@ -14,7 +14,7 @@
     width: 100%;
     padding: 1rem;
     border-radius: 0.5rem;
-    border: 1px solid #7c6fe023;
+    border: 1px solid $accent;
     font-size: 1.6rem;
 
     transition: background-color 0.2s ease; /* Add transition for hover effect */
@@ -25,7 +25,7 @@
   display: flex;
   flex-direction: column;
   align-items: start;
-  background-color: #fefefe;
+  background-color: $background-alt;
   gap: 1rem;
   padding: 4rem;
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.05);
@@ -35,7 +35,6 @@
 
 select:hover {
   cursor: pointer;
-  background-color: #f8f7fc; /* Change background color on hover */
 }
 
 textarea {
@@ -43,7 +42,7 @@ textarea {
   width: 100%;
   padding: 1rem;
   border-radius: 0.5rem;
-  border: 1px solid #7c6fe023;
+  border: 1px solid $accent-dark;
   font-size: 1.6rem;
   resize: vertical;
 }
@@ -53,7 +52,7 @@ textarea {
   padding: 3rem;
   margin-bottom: 2rem;
   border-radius: 0.5rem;
-  background-color: #fefefe;
+  background-color: $background-alt;
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.04);
   max-height: 35rem;
   overflow: auto;
@@ -78,6 +77,6 @@ textarea {
 
 /* Placeholder Text */
 .generator__code-item--placeholder {
-  color: #7a7676;
+  color: $text-light;
   font-style: italic;
 }

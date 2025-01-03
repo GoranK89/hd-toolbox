@@ -1,48 +1,30 @@
-//Navbar
-$darkBlue: #003366;
-$blue: #007fff;
-$dirtyWhite: #f8f8f8;
+// Primary Colors
+$primary: #4a90e2;
+$primary-light: #b0d4ff;
+$primary-dark: #2e86c1;
 
-// games component
-$color-blue: #367588;
-$color-light-blue: #64b5f6;
-$color-green: #6c9575;
-$color-yellow: #fbc02d;
-$color-soft-red: #e57373;
+// Secondary Colors
+$secondary: #e67e22;
+$secondary-light: #f39c12;
+$secondary-dark: #d35400;
 
-$color-beige: #f4f3e7;
-$color-blue-muted: #52688c;
-$color-blue-gray: #c3d0d3;
-$color-blue-dark: #312d4e;
+// Neutral Colors
+$neutral-light: #ecf0f1;
+$neutral: #bdc3c7;
+$neutral-dark: #7f8c8d;
 
-//EXPERIMENTAL
-$light-blue: #89cff0; // A soft light blue
-$medium-blue: #0a95d7; // A medium shade of blue for the main elements
-$dark-blue: #064d8c; // A darker blue for active states or hover effects
-$neon-blue: #39f; // A bright neon blue for highlights or active elements
-// White for text and contrast
-$light-gray: #f0f0f0; // Light gray for backgrounds or less emphasized elements
+// Accent Colors
+$accent: #16a085;
+$accent-light: #1abc9c;
+$accent-dark: #148f77;
+$accent-ok: #2ecc71;
 
-// new pallete!
-$black: #242424;
-$white: #ffffff;
-$gray: #898a8c;
-$gray-dark: #606266;
-$gray-light: #e8ebf2;
-$green: #0ad673;
-$green-light: #30ec92;
-$violet: #695cb6;
-$violet-dark: #4e45ba;
-$violet-opaque: #695cb663;
-$red: #fa1d21;
-$red-light: #f85c5f;
-$pink: #ffdad9;
-$pink-light: #f2f3f8;
-$pink-dark: #f8bac5;
-$orange: #fa7e5e;
-$orange-light: #eeb49a;
+// Background Colors
+$background: #ffffff;
+$background-alt: #f8f9fa;
 
-$blue: #4a90e2; // buttons
-$blue-light: #b0d4ff; // edit button
-$green-calm: #4caf50; // buttons
-$green-clear: #27ae60; // icons ok
+// Text Colors
+$text: #2c3e50;
+$text-light: #95a5a6;
+
+$warning: #e74c3c;

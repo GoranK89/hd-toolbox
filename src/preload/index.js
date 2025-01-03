@@ -20,6 +20,9 @@ const api = {
   },
   transferIcons: () => {
     ipcRenderer.send('transferIcons')
+  },
+  getImagePaths: () => {
+    return ipcRenderer.invoke('getImagePaths')
   }
 }
 

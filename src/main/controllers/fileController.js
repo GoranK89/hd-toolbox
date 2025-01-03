@@ -30,6 +30,7 @@ function editGameIniFile(gameCode, gameType, gameName) {
   const gameIniPath = path.join(gameCodePath, 'game_en.ini')
   // delete previous game_en.ini file
   fs.unlinkSync(gameIniPath)
+  // write file with new data
   fs.writeFileSync(gameIniPath, `type=${gameType}\ntitle=${gameName}\ncontent=${gameName}`)
 }
 

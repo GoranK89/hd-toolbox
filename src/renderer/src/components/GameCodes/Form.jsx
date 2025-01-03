@@ -153,7 +153,7 @@ const Form = () => {
 
     // check if any game codes are too long
     gameCodes.forEach((code) => {
-      if (code?.length >= 50) {
+      if (code?.length >= 51) {
         newGameCodeTooLong.push(code)
       } else {
         newGameCodes.push(code)
@@ -186,7 +186,7 @@ const Form = () => {
           onChange={handleGameNamesChange}
           className="generator__textarea"
         ></textarea>
-        <button className="button button--large button--gradient-green" type="submit">
+        <button className="button button--large button--primary" type="submit">
           Generate game codes
         </button>
       </form>

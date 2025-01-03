@@ -9,10 +9,7 @@ const Output = ({ gameCodes }) => {
       <div className="generator__title-wrapper">
         <h2 className="generator__output-title">Game codes</h2>
         {gameCodes?.length > 0 && (
-          <button
-            className="button button--small button--gradient-purple"
-            onClick={copyCodesToClipboard}
-          >
+          <button className="button button--small button--tertiary" onClick={copyCodesToClipboard}>
             Copy All
           </button>
         )}

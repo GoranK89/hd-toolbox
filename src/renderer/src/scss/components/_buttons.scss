@@ -1,62 +1,75 @@
 /* Base Button */
 .button {
-  padding: 1rem 2rem;
-  border-radius: 0.5rem;
-  border: none;
+  padding: 0.8rem 1.6rem;
+  border-radius: 0.6rem;
+  border: 2px solid transparent;
   color: #fff;
   font-weight: 600;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   cursor: pointer;
-  background-size: 400% 400%;
   transition:
-    background-position 0.5s,
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.2s ease,
     transform 0.2s ease;
 
   &--large {
-    padding: 1rem 2rem;
     font-size: 1.6rem;
     width: 100%;
+    align-self: center;
   }
 
   &--small {
     padding: 0.5rem 1rem;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
   }
 
-  &--blue {
-    background: $blue;
+  &--primary {
+    background-color: $primary;
+    &:hover {
+      background-color: lighten($primary, 10%);
+    }
+    &:active {
+      background-color: darken($primary, 10%);
+      transform: translateY(2px);
+    }
   }
 
-  &--violet {
-    background: $violet;
+  &--secondary {
+    background-color: $secondary;
+    &:hover {
+      background-color: lighten($secondary, 10%);
+    }
+    &:active {
+      background-color: darken($secondary, 10%);
+      transform: translateY(2px);
+    }
   }
 
-  &--blue-light {
-    background: $blue-light;
+  &--tertiary {
+    background-color: $accent;
+    &:hover {
+      background-color: lighten($accent, 10%);
+    }
+    &:active {
+      background-color: darken($accent, 10%);
+      transform: translateY(2px);
+    }
   }
 
-  &--gradient-green {
-    background: linear-gradient(45deg, $green, $green-light);
+  &--delete {
+    background-color: $warning;
+    &:hover {
+      background-color: lighten($warning, 10%);
+    }
+    &:active {
+      background-color: darken($warning, 10%);
+      transform: translateY(2px);
+    }
   }
 
-  &--gradient-orange {
-    background: linear-gradient(45deg, $orange, $orange-light);
-  }
-
-  &--gradient-violet {
-    background: linear-gradient(45deg, $violet, $violet-opaque);
-  }
-
-  &--gradient-red {
-    background: linear-gradient(45deg, $red, $red-light);
-  }
-
-  &:hover {
-    transform: translate(0, -2px);
-    background-position: right bottom;
-  }
-
-  &:active {
-    transform: translate(0, 0);
+  &--disabled {
+    background-color: $neutral-dark;
+    cursor: not-allowed;
   }
 }

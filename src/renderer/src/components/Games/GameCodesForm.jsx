@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useUploadFolder } from '../../contexts/UploadFolderContext'
 
 const GameCodesForm = () => {
   const [gameCodes, setGameCodes] = useState('')
-  const { storeGameCodes, checkIconsInBrowser, transferIcons } = useUploadFolder()
+  const [transferIconsDisabled, setTransferIconsDisabled] = useState(true)
+
+  const { state, storeGameCodes, checkIconsInBrowser, transferIcons } = useUploadFolder()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -33,6 +35,17 @@ const GameCodesForm = () => {
     transferIcons()
   }
 
+  // disable transfer icons button if icons are in folders
+  useEffect(() => {
+    isDisabled()
+  }, [state])
+
+  function isDisabled() {
+    state.map((item) => {
+      if (item.iconsExist === false) setTransferIconsDisabled(false)
+    })
+  }
+
   return (
     <div className="form-layout">
       <form className="game-form" onSubmit={handleSubmit}>
@@ -44,14 +57,31 @@ const GameCodesForm = () => {
           rows="10"
           cols="30"
         />
-        <button className="button button--large button--gradient-green" type="submit">
-          Submit
-        </button>
-        <button className="button button--large button--violet" onClick={transferIconsHandler}>
-          Move Icons
-        </button>
+        <div className="form-layout__buttons">
+          <button
+            className={`${
+              gameCodes
+                ? 'button button--large button--primary'
+                : 'button button--large button--disabled'
+            }`}
+            type="submit"
+          >
+            Submit
+          </button>
+          <button
+            className={`${
+              transferIconsDisabled
+                ? 'button button--large button--disabled'
+                : 'button button--large button--secondary'
+            }`}
+            disabled={transferIconsDisabled}
+            onClick={transferIconsHandler}
+          >
+            Move Icons
+          </button>
+        </div>
       </form>
-      <button className="button button--large button--gradient-orange" onClick={checkCdnHandler}>
+      <button className="button button--large button--tertiary" onClick={checkCdnHandler}>
         Check CDN
       </button>
     </div>

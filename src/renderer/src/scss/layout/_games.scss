@@ -5,13 +5,20 @@
   height: 100vh;
   padding: 2rem;
   gap: 1rem;
-  background-color: $white;
+  background-color: $background-alt;
 
   .form-layout {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     padding: 2rem;
+
+    .form-layout__buttons {
+      display: flex;
+      width: 100%;
+      gap: 3rem;
+      justify-content: space-between;
+    }
   }
 
   .game-form {
@@ -28,7 +35,7 @@
       font-family: 'Roboto', sans-serif;
       font-weight: 600;
       resize: none;
-      color: $gray-dark;
+      color: $text;
       outline: none;
       font-size: 1.6rem;
       padding: 1rem;
@@ -36,12 +43,12 @@
       border-radius: 1rem;
 
       &::placeholder {
-        color: $gray-dark;
+        color: $text-light;
         font-weight: 400;
       }
 
       &:focus {
-        box-shadow: 0 3px 10px $orange-light;
+        box-shadow: 0 3px 10px $neutral;
       }
     }
   }
@@ -61,26 +68,33 @@
     }
 
     &::-webkit-scrollbar-track {
-      background: #f1f1f1;
+      background: $background-alt;
     }
 
     &::-webkit-scrollbar-thumb {
-      background: #888;
+      background: $neutral;
       border-radius: 5px;
     }
 
     &::-webkit-scrollbar-thumb:hover {
-      background: #555;
+      background: $neutral-light;
+    }
+
+    &__background {
+      padding-left: 0.8rem;
+      border-radius: 1rem;
+      background-color: $accent-light;
     }
 
     &__container {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      color: $gray-dark;
-      padding: 1rem;
-      border-radius: 1rem;
-      box-shadow: 0 1px 7px rgba(0, 0, 0, 0.2);
+      color: $text;
+      background-color: $background-alt;
+      padding: 1rem 2rem;
+      border-radius: 0 0.9rem 0.9rem 0;
+      box-shadow: 2px 1px 10px rgba(65, 65, 65, 0.1);
 
       &-description {
         display: flex;
@@ -112,11 +126,11 @@
         }
 
         .icons-ok::after {
-          background-color: $green;
+          background-color: $accent-ok;
         }
 
         .icons-check::after {
-          background-color: $orange;
+          background-color: $secondary-light;
         }
       }
     }

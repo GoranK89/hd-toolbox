@@ -46,7 +46,7 @@ export default function TaskHelper() {
         cols="50"
         style={{ width: '100%', marginBottom: '1rem' }}
       />
-      <button className="button button--large button--gradient-green" onClick={seperateByGp}>
+      <button className="button button--large button--primary" onClick={seperateByGp}>
         Process Rows
       </button>
       <div className="task-helper__table-container">

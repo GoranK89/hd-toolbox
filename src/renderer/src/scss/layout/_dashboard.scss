@@ -1,5 +1,33 @@
 .dashboard {
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
+  overflow-y: auto;
+  padding: 1rem;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  th,
+  td {
+    border: 1px solid $neutral-light;
+    padding: 8px;
+  }
+
+  th {
+    color: $background;
+    background-color: $accent-light;
+    text-align: left;
+  }
+
+  td {
+    vertical-align: top;
+  }
+
+  img {
+    margin: 5px;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+  }
 }

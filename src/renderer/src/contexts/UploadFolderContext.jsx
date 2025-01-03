@@ -31,19 +31,20 @@ function UploadFolderProvider({ children }) {
   async function deleteFolder(folderName) {
     await window.api.deleteGameCodes(folderName)
     dispatch({ type: 'folderDelete', payload: folderName })
+    await readFolders()
   }
 
   async function readFolders() {
     const gameCodes = await window.api.readGameCodes()
 
-    const stateIds = state.map((game) => game.id)
-    const gameCodeIds = gameCodes.map((game) => game.id)
+    const frontendStateJson = JSON.stringify(state)
+    const backendStateJson = JSON.stringify(gameCodes)
 
-    const isDifferent =
-      gameCodeIds.some((id) => !stateIds.includes(id)) ||
-      stateIds.some((id) => !gameCodeIds.includes(id))
+    const stateIsDifferent = frontendStateJson !== backendStateJson
 
-    if (isDifferent) {
+    console.log(`Desktop data is different from app state, folders were updated in app`)
+
+    if (stateIsDifferent) {
       dispatch({ type: 'foldersRead', payload: gameCodes })
     }
   }
@@ -54,10 +55,15 @@ function UploadFolderProvider({ children }) {
 
   async function editGameInfo(id, editedValues) {
     await window.api.editGameInfo(id, editedValues)
+    await readFolders()
   }
 
   async function transferIcons() {
     await window.api.transferIcons()
+  }
+
+  async function getImagePaths() {
+    return await window.api.getImagePaths()
   }
 
   return (
@@ -69,7 +75,8 @@ function UploadFolderProvider({ children }) {
         readFolders,
         checkIconsInBrowser,
         editGameInfo,
-        transferIcons
+        transferIcons,
+        getImagePaths
       }}
     >
       {children}

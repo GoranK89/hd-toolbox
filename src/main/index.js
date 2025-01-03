@@ -21,7 +21,7 @@ import icon from '../../resources/icon.png?asset'
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 1000,
+    width: 1100,
     height: 700,
     show: false,
     autoHideMenuBar: true,
@@ -106,7 +106,7 @@ ipcMain.on('deleteGameCodes', async (event, gameCodesToDelete) => {
     await deleteGameCodes(gameCodesToDelete)
     deleteFolders(gameCodesToDelete)
 
-    // read the game codes from JSON and regenerate icons txt file
+    // read the game codes from JSON and create a new TXT
     await createFolderLinks()
   } catch (error) {
     console.error(`Failed to handle 'deleteGameCodes':`, error)
@@ -133,13 +133,18 @@ ipcMain.on('editGameInfo', async (event, id, editedValues) => {
 // copy icons from materials folder to new upload foldrs
 ipcMain.on('transferIcons', async () => {
   try {
-    getImagePaths()
     await transferIcons()
   } catch (error) {
     console.error(`Failed to transfer icons: ${error}`)
   }
 })
 
+// send icons paths data to frontend
+ipcMain.handle('getImagePaths', async () => {
+  return getImagePaths()
+})
+
+// Check icons on CDN
 ipcMain.handle('openIconUrls', async () => {
   try {
     await checkIconsInBrowser()

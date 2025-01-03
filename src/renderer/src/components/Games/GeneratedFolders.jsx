@@ -36,55 +36,57 @@ const GeneratedFolders = () => {
   return (
     <div className="generated-folders">
       {state?.map((item) => (
-        <div className="generated-folders__container" key={item.id}>
-          <div className="generated-folders__container-description">
-            <h2>{item.id}</h2>
-            {editingId === item.id ? (
-              <>
-                <input
-                  type="text"
-                  value={editedValues[item.id]?.name || item.name}
-                  onChange={(e) => handleInputChange(item.id, 'name', e.target.value)}
-                />
-                <select
-                  value={editedValues[item.id]?.type || item.type}
-                  onChange={(e) => handleInputChange(item.id, 'type', e.target.value)}
-                >
-                  <option value="SLOT">SLOT</option>
-                  <option value="SIMPLE">SIMPLE</option>
-                  <option value="CARD">CARD</option>
-                  <option value="TABLE">TABLE</option>
-                </select>
-                <button
-                  className="button button--small button--violet-light"
-                  onClick={() => handleSave(item.id)}
-                >
-                  SAVE
-                </button>
-              </>
-            ) : (
-              <>
-                <p>{item.name}</p>
-                <p>{item.type}</p>
-                <button
-                  className="button button--small button--gradient-violet"
-                  onClick={() => handleEdit(item.id)}
-                >
-                  EDIT
-                </button>
-              </>
-            )}
+        <div className="generated-folders__background" key={item.id}>
+          <div className="generated-folders__container">
+            <div className="generated-folders__container-description">
+              <h2>{item.id}</h2>
+              {editingId === item.id ? (
+                <>
+                  <input
+                    type="text"
+                    value={editedValues[item.id]?.name || item.name}
+                    onChange={(e) => handleInputChange(item.id, 'name', e.target.value)}
+                  />
+                  <select
+                    value={editedValues[item.id]?.type || item.type}
+                    onChange={(e) => handleInputChange(item.id, 'type', e.target.value)}
+                  >
+                    <option value="SLOT">SLOT</option>
+                    <option value="SIMPLE">SIMPLE</option>
+                    <option value="CARD">CARD</option>
+                    <option value="TABLE">TABLE</option>
+                  </select>
+                  <button
+                    className="button button--small button--primary"
+                    onClick={() => handleSave(item.id)}
+                  >
+                    SAVE
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p>{item.name}</p>
+                  <p>{item.type}</p>
+                  <button
+                    className="button button--small button--primary"
+                    onClick={() => handleEdit(item.id)}
+                  >
+                    EDIT
+                  </button>
+                </>
+              )}
 
-            <p className={item.iconsExist ? 'icons-ok' : 'icons-check'}>
-              {item.iconsExist ? 'Icons OK' : 'Icons missing'}
-            </p>
+              <p className={item.iconsExist ? 'icons-ok' : 'icons-check'}>
+                {item.iconsExist ? 'Icons OK' : 'Icons missing'}
+              </p>
+            </div>
+            <button
+              className="button button--small button--delete"
+              onClick={() => deleteFolder(item.id)}
+            >
+              <FaTrash />
+            </button>
           </div>
-          <button
-            className="button button--small button--gradient-red"
-            onClick={() => deleteFolder(item.id)}
-          >
-            <FaTrash />
-          </button>
         </div>
       ))}
     </div>

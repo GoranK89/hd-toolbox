@@ -2,7 +2,8 @@ import fs from 'fs'
 import path from 'path'
 import { BASE_PATH, JSON_PATH, MATERIALS_PATH } from '../utils/pathUtils'
 import { readJSONFile } from '../utils/generalPurposeFunctions'
-import { shell } from 'electron'
+import { shell, nativeImage } from 'electron'
+
 const unzipper = require('unzipper')
 
 const createFolderLinks = async () => {
@@ -108,12 +109,6 @@ const transferIcons = async () => {
   }
 }
 
-// send image paths to frontend
-const getImagePaths = () => {
-  const newUploadContent = fs.readdirSync(BASE_PATH)
-  const newUploadfolders = newUploadContent.filter((folder) => !folder.includes('.'))
-}
-
 // Check if icons exist in a folder
 const checkGameIcons = (folderName) => {
   const uploadFolder = fs.readdirSync(BASE_PATH)
@@ -140,6 +135,30 @@ const checkIconsInBrowser = async () => {
   iconUrls.forEach((url) => {
     shell.openExternal(url)
   })
+}
+
+// send image paths to frontend
+const getImagePaths = () => {
+  const newUploadContent = fs.readdirSync(BASE_PATH)
+  const gameIconFolders = newUploadContent.filter((folder) => !folder.includes('.'))
+
+  const imagePaths = gameIconFolders
+    .map((folder) => {
+      const launchFolderPath = path.join(BASE_PATH, folder, 'launch')
+      const icons = fs.readdirSync(launchFolderPath).filter((file) => file.endsWith('.png'))
+      return icons.map((icon) => {
+        const iconPath = path.join(launchFolderPath, icon)
+        const image = nativeImage.createFromPath(iconPath)
+        return {
+          folder,
+          path: iconPath,
+          dataUrl: image.toDataURL()
+        }
+      })
+    })
+    .flat()
+
+  return imagePaths
 }
 
 export { createFolderLinks, checkGameIcons, transferIcons, getImagePaths, checkIconsInBrowser }
