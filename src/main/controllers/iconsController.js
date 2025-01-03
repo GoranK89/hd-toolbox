@@ -83,7 +83,9 @@ const transferIcons = async () => {
       const destinationFolder = newUploadFolders[lowerCaseFolderNames.indexOf(zipFileName)]
       const destinationPath = path.join(BASE_PATH, destinationFolder, 'launch')
 
-      // Ensure the destination folder exists
+      // Ensure the destination folder exists, ignore json
+      if (destinationPath.includes('.json')) continue
+
       if (!fs.existsSync(destinationPath)) console.log(`Folder ${destinationFolder} not found`)
       if (!fs.existsSync(destinationFolder))
         console.log(`Folder ${destinationFolder} already has icons`)
