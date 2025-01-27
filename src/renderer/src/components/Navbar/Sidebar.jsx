@@ -28,12 +28,12 @@ function Sidebar() {
           Game Codes
         </NavLink>
       </li>
-      <li>
+      {/* <li>
         <NavLink className="navbar__item" to="taskHelper">
           <BsLifePreserver />
           Task Helper
         </NavLink>
-      </li>
+      </li> */}
     </ul>
   )
 }

@@ -4,6 +4,7 @@ const specialGameProviders = [
   'BOOMING',
   'BOOMINGM',
   'EGT',
+  'EGTM',
   'EVOLD',
   'EVOLDM',
   'FAZI',

@@ -36,7 +36,14 @@ const GeneratedFolders = () => {
   return (
     <div className="generated-folders">
       {state?.map((item) => (
-        <div className="generated-folders__background" key={item.id}>
+        <div
+          className={
+            item.iconsExist
+              ? 'generated-folders__background--ok'
+              : 'generated-folders__background--missing'
+          }
+          key={item.id}
+        >
           <div className="generated-folders__container">
             <div className="generated-folders__container-description">
               <h2>{item.id}</h2>
