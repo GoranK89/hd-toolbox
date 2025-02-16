@@ -1,3 +1,4 @@
+import fs from 'fs'
 import specialGameProviders from '../specialGameProviders'
 import {
   readJSONFile,
@@ -13,20 +14,26 @@ import { checkGameIcons } from '../controllers/iconsController'
 const readExistingGameCodes = async () => {
   let existingGameCodes = []
 
-  // Read existing game codes, if cannot read, create a new JSON file
   try {
+    const fileExists = fs.existsSync(JSON_PATH)
+
+    if (!fileExists) {
+      // Create new file with empty array
+      await writeJSONFile(JSON_PATH, existingGameCodes)
+      return existingGameCodes
+    }
+
+    // Read existing file
     existingGameCodes = await readJSONFile(JSON_PATH)
   } catch (error) {
     if (error.code === 'ENOENT') {
       console.log(`File ${JSON_PATH} does not exist, creating a new one.`)
-      await writeJSONFile(JSON_PATH, existingGameCodes)
-    } else {
-      // If the error is not because the file doesn't exist, rethrow it.
-      throw error
+      await writeJSONFile(JSON_PATH, [])
+      return []
     }
-  }
 
-  return existingGameCodes
+    throw new Error(`Failed to read game codes file: ${error.message}`)
+  }
 }
 
 // receives a game code and the existing game codes, compares new game code with existing ones and returns the updated game code object

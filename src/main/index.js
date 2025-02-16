@@ -153,4 +153,14 @@ ipcMain.handle('openIconUrls', async () => {
   }
 })
 // connect to google sheets API to get game names and types
-// TODO: send data from all electron actions to renderer
+// TODO: YGG and YAT games
+// TOM, TOMM and TH2 games
+// add if checks I guess
+
+// reduce game cards background and box shadow
+
+// add more validation checks to game codes input
+
+// return and display errors
+
+// show icons in game card (actualy rework how data is sent to frontend entirely)
