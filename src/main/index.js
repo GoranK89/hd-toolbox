@@ -153,11 +153,12 @@ ipcMain.handle('openIconUrls', async () => {
   }
 })
 // connect to google sheets API to get game names and types
-// TODO: YGG and YAT games
-// TOM, TOMM and TH2 games
-// add if checks I guess
 
-// reduce game cards background and box shadow
+/*
+ TODO: YGG and YAT games
+ TOM, TOMM and TH2 games
+ add if checks I guess
+*/
 
 // add more validation checks to game codes input
 

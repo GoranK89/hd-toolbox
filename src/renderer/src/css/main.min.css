@@ -174,10 +174,10 @@ input[type=number]::-webkit-outer-spin-button {
   align-items: center;
   color: #2c3e50;
   background-color: #f8f9fa;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: rgba(255, 255, 255, 0.96);
   padding: 1rem 2rem;
   border-radius: 0 0.9rem 0.9rem 0;
-  box-shadow: 2px 0 15px 1px rgba(65, 65, 65, 0.15);
+  box-shadow: 1px 0 10px 1px rgba(65, 65, 65, 0.15);
 }
 .games-grid .generated-folders__container-description {
   display: flex;
