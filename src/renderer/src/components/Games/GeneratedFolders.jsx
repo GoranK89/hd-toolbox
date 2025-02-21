@@ -1,9 +1,9 @@
 import { FaTrash } from 'react-icons/fa'
-import { useUploadFolder } from '../../contexts/UploadFolderContext'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useGames } from '../../hooks/useGames'
 
 const GeneratedFolders = () => {
-  const { state, deleteFolder, readFolders, editGameInfo } = useUploadFolder()
+  const { folders, deleteFolder, editGameInfo } = useGames()
   const [editedValues, setEditedValues] = useState({})
   const [editingId, setEditingId] = useState(null)
 
@@ -17,10 +17,6 @@ const GeneratedFolders = () => {
     }))
   }
 
-  useEffect(() => {
-    readFolders()
-  }, [state])
-
   console.log('reloading game folders...')
 
   function handleEdit(id) {
@@ -28,14 +24,14 @@ const GeneratedFolders = () => {
   }
 
   async function handleSave(id) {
-    await editGameInfo(id, editedValues[id])
+    editGameInfo(id, editedValues[id])
     console.log(`Game info for game code ${id} saved:`, editedValues[id])
     setEditingId(null)
   }
 
   return (
     <div className="generated-folders">
-      {state?.map((item) => (
+      {folders?.map((item) => (
         <div
           className={
             item.iconsExist

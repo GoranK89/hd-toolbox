@@ -113,13 +113,12 @@ ipcMain.handle('readGameCodes', async (event) => {
   }
 })
 
-ipcMain.on('deleteGameCodes', async (event, gameCodesToDelete) => {
+ipcMain.handle('deleteGameCodes', async (event, gameCodesToDelete) => {
   try {
-    await deleteGameCodes(gameCodesToDelete)
-    deleteFolders(gameCodesToDelete)
-
+    const result = await deleteGameCodes(gameCodesToDelete)
     // read the game codes from JSON and create a new TXT
     await createFolderLinks()
+    return result
   } catch (error) {
     console.error(`Failed to handle 'deleteGameCodes':`, error)
   }

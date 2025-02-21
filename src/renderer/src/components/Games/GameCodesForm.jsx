@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import { useUploadFolder } from '../../contexts/UploadFolderContext'
+import { useGames } from '../../hooks/useGames'
 
 const GameCodesForm = () => {
   const [gameCodes, setGameCodes] = useState('')
   const [transferIconsDisabled, setTransferIconsDisabled] = useState(true)
 
-  const { state, storeGameCodes, checkIconsInBrowser, transferIcons } = useUploadFolder()
+  const { folders, storeGameCodes, checkIconsInBrowser, transferIcons } = useGames()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -20,7 +20,7 @@ const GameCodesForm = () => {
         .filter((code) => code !== '')
 
       // // store the cleaned up codes array
-      await storeGameCodes(codesArray)
+      storeGameCodes(codesArray)
       setGameCodes('')
     } catch (error) {
       console.error('Error submitting game codes', error)
@@ -38,7 +38,7 @@ const GameCodesForm = () => {
   // disable transfer icons button if icons are in folders
   useEffect(() => {
     isDisabled()
-  }, [state])
+  }, [folders])
 
   function isDisabled() {
     // state.map((item) => {

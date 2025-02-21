@@ -7,7 +7,7 @@ const api = {
     return ipcRenderer.invoke('storeGameCodes', gameCodes)
   },
   deleteGameCodes: (gameCodes) => {
-    ipcRenderer.send('deleteGameCodes', gameCodes)
+    return ipcRenderer.invoke('deleteGameCodes', gameCodes)
   },
   readGameCodes: () => {
     return ipcRenderer.invoke('readGameCodes')

@@ -1,6 +1,6 @@
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
-
-import { UploadFolderProvider } from './contexts/UploadFolderContext'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 import AppLayout from './pages/AppLayout'
 import Games from './components/Games/Games'
@@ -8,9 +8,19 @@ import GameCodes from './components/GameCodes/GameCodes'
 import TaskHelper from './components/TaskHelper/TaskHelper'
 import Dashboard from './components/Dashboard/Dashboard'
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 2,
+      staleTime: 1000 * 60 // 1 minute
+    }
+  }
+})
+
 function App() {
   return (
-    <UploadFolderProvider>
+    <QueryClientProvider client={queryClient}>
       <HashRouter>
         <Routes>
           <Route element={<AppLayout />}>
@@ -22,7 +32,8 @@ function App() {
           </Route>
         </Routes>
       </HashRouter>
-    </UploadFolderProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   )
 }
 

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { useUploadFolder } from '../../contexts/UploadFolderContext'
+import { useGames } from '../../hooks/useGames'
 
 function Dashboard() {
-  const { getImagePaths } = useUploadFolder()
+  const { getImagePaths } = useGames()
   const [imagePaths, setImagePaths] = useState([])
 
   useEffect(() => {
