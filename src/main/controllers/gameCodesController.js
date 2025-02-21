@@ -12,27 +12,21 @@ import { createGameFolder } from '../controllers/fileController'
 import { checkGameIcons } from '../controllers/iconsController'
 
 const readExistingGameCodes = async () => {
-  let existingGameCodes = []
-
   try {
     const fileExists = fs.existsSync(JSON_PATH)
 
     if (!fileExists) {
       // Create new file with empty array
-      await writeJSONFile(JSON_PATH, existingGameCodes)
-      return existingGameCodes
-    }
-
-    // Read existing file
-    existingGameCodes = await readJSONFile(JSON_PATH)
-  } catch (error) {
-    if (error.code === 'ENOENT') {
-      console.log(`File ${JSON_PATH} does not exist, creating a new one.`)
       await writeJSONFile(JSON_PATH, [])
       return []
     }
 
-    throw new Error(`Failed to read game codes file: ${error.message}`)
+    // Read existing file
+    const existingGameCodes = await readJSONFile(JSON_PATH)
+    return existingGameCodes || [] // Ensure we always return an array
+  } catch (error) {
+    console.error('Error reading game codes:', error)
+    return [] // Always return an array even on error
   }
 }
 
@@ -95,7 +89,7 @@ const processGameCode = (newGameCode, existingGameCodes) => {
       symlinks: []
     })
   } else {
-    console.log(`Duplicate game code: ${newGameCode}`)
+    throw new Error(`Duplicate game code: ${newGameCode}`)
   }
   return existingGameCodes
 }
@@ -114,10 +108,16 @@ async function handleGameCodes(newGameCodes) {
   await ensureUploadFolderExists(BASE_PATH)
 
   let existingGameCodes = await readExistingGameCodes()
+  let errors = []
 
-  newGameCodes.forEach((newGameCode) => {
-    existingGameCodes = processGameCode(newGameCode, existingGameCodes)
-  })
+  for (const newGameCode of newGameCodes) {
+    try {
+      existingGameCodes = processGameCode(newGameCode, existingGameCodes)
+    } catch (error) {
+      errors.push({ gameCode: newGameCode, error: error.message })
+      continue
+    }
+  }
 
   // Update iconsExist property for each game code
   existingGameCodes = existingGameCodes.map((gameCode) => ({
@@ -127,6 +127,12 @@ async function handleGameCodes(newGameCodes) {
 
   await storeGameCodes(existingGameCodes)
   await createGameFolders()
+
+  return {
+    success: true,
+    processedGameCodes: existingGameCodes,
+    errors: errors.length > 0 ? errors : null
+  }
 }
 
 export { readExistingGameCodes, processGameCode, handleGameCodes }

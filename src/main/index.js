@@ -86,9 +86,21 @@ app.on('window-all-closed', () => {
 /////////////////////////// **  IPC HANDLERS ** /////////////////////
 /////////////////////////////////////////////////////////////////////
 
-ipcMain.on('storeGameCodes', async (event, newGameCodes) => {
-  await handleGameCodes(newGameCodes)
-  await createFolderLinks()
+ipcMain.handle('storeGameCodes', async (event, newGameCodes) => {
+  try {
+    const result = await handleGameCodes(newGameCodes)
+    await createFolderLinks()
+    return {
+      success: true,
+      errors: result.errors
+    }
+  } catch (err) {
+    console.log(err.message)
+    return {
+      success: false,
+      error: err.message
+    }
+  }
 })
 
 ipcMain.handle('readGameCodes', async (event) => {
