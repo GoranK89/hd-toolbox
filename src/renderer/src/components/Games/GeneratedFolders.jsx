@@ -17,15 +17,12 @@ const GeneratedFolders = () => {
     }))
   }
 
-  console.log('reloading game folders...')
-
   function handleEdit(id) {
     setEditingId(id)
   }
 
-  async function handleSave(id) {
+  function handleSave(id) {
     editGameInfo(id, editedValues[id])
-    console.log(`Game info for game code ${id} saved:`, editedValues[id])
     setEditingId(null)
   }
 

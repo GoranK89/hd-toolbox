@@ -4,14 +4,23 @@ export const gamesApi = {
     return gameCodes
   },
   storeGameCodes: async (gameCodes) => {
-    const result = await window.api.storeGameCodes(gameCodes)
-    return result
+    const res = await window.api.storeGameCodes(gameCodes)
+    return res
   },
   deleteGameCodes: async (id) => {
-    console.log('delete ' + id)
-    return await window.api.deleteGameCodes(id)
+    const res = await window.api.deleteGameCodes(id)
+    return res
   },
   editGameInfo: async (id, editedValues) => {
     return await window.api.editGameInfo(id, editedValues)
+  },
+  checkIconsInBrowser: async () => {
+    return await window.api.openIconUrls()
+  },
+  transferIcons: async () => {
+    return await window.api.transferIcons()
+  },
+  getImagePaths: async () => {
+    return await window.api.getImagePaths()
   }
 }

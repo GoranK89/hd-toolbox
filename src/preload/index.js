@@ -16,7 +16,7 @@ const api = {
     return ipcRenderer.invoke('openIconUrls')
   },
   editGameInfo: (id, editedValues) => {
-    ipcRenderer.send('editGameInfo', id, editedValues)
+    return ipcRenderer.invoke('editGameInfo', id, editedValues)
   },
   transferIcons: () => {
     ipcRenderer.send('transferIcons')

@@ -125,7 +125,7 @@ ipcMain.handle('deleteGameCodes', async (event, gameCodesToDelete) => {
 })
 
 // after the change identical game codes get added to similar games
-ipcMain.on('editGameInfo', async (event, id, editedValues) => {
+ipcMain.handle('editGameInfo', async (event, id, editedValues) => {
   try {
     let gameCodes = await readJSONFile(JSON_PATH)
     let gameCodeIndex = gameCodes.findIndex((gameCode) => gameCode.id === id)
@@ -136,6 +136,9 @@ ipcMain.on('editGameInfo', async (event, id, editedValues) => {
       gameCodes[gameCodeIndex].name
     )
     await writeJSONFile(JSON_PATH, gameCodes)
+
+    const freshJsonData = await readJSONFile(JSON_PATH)
+    return freshJsonData
   } catch (error) {
     console.error(`Failed to handle 'editGameInfo':`, error)
   }
