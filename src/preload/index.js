@@ -23,6 +23,9 @@ const api = {
   },
   getImagePaths: () => {
     return ipcRenderer.invoke('getImagePaths')
+  },
+  refreshIconStatus: () => {
+    return ipcRenderer.invoke('refreshIconStatus')
   }
 }
 

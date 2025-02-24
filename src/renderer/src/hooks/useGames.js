@@ -12,8 +12,10 @@ export function useGames() {
   } = useQuery({
     queryKey: ['folders'],
     queryFn: gamesApi.readGameCodes,
+    refetchInterval: 2000,
     staleTime: 1000,
-    refetchOnWindowFocus: true
+    refetchOnWindowFocus: true,
+    keepPreviousData: true
   })
 
   const storeGameCodes = useMutation({

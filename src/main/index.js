@@ -12,9 +12,10 @@ import {
   createFolderLinks,
   transferIcons,
   getImagePaths,
+  checkGameIcons,
   checkIconsInBrowser
 } from './controllers/iconsController.js'
-import { deleteGameCodes, deleteFolders } from './controllers/deleteController.js'
+import { deleteGameCodes } from './controllers/deleteController.js'
 
 import icon from '../../resources/icon.png?asset'
 
@@ -166,6 +167,22 @@ ipcMain.handle('openIconUrls', async () => {
     console.error('Error in openIconUrls:', error)
   }
 })
+
+ipcMain.handle('refreshIconStatus', async () => {
+  try {
+    let json = await readJSONFile(JSON_PATH)
+    json = json.map((gameCode) => ({
+      ...gameCode,
+      iconsExist: checkGameIcons(gameCode.id)
+    }))
+    await writeJSONFile(JSON_PATH, json)
+    return json
+  } catch (error) {
+    console.log('Failed to refresh icon status:', error)
+    return null
+  }
+})
+
 // connect to google sheets API to get game names and types
 
 /*

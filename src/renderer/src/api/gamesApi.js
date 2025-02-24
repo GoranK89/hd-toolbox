@@ -1,6 +1,16 @@
 export const gamesApi = {
   readGameCodes: async () => {
     const gameCodes = await window.api.readGameCodes()
+    const withIcons = await window.api.refreshIconStatus()
+
+    // Merge the results
+    if (withIcons) {
+      return gameCodes.map((code) => ({
+        ...code,
+        iconsExist: withIcons.find((i) => i.id === code.id)?.iconsExist ?? code.iconsExist
+      }))
+    }
+
     return gameCodes
   },
   storeGameCodes: async (gameCodes) => {
