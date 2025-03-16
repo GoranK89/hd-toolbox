@@ -41,10 +41,10 @@ const GeneratedFolders = () => {
   }, [folders, showMissingIcons])
 
   return (
-    <div>
+    <div className="generated-folders">
       <button
         className={`button button--small ${
-          showMissingIcons ? 'button--secondary' : 'button--tertiary'
+          showMissingIcons ? 'button--tertiary' : 'button--secondary'
         }`}
         onClick={toggleIconFilter}
       >
