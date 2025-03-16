@@ -41,12 +41,12 @@ const GameCodesForm = () => {
   }, [folders])
 
   function isDisabled() {
-    // state.map((item) => {
-    //   if (item.iconsExist === false) setTransferIconsDisabled(false)
-    // })
+    folders.map((item) => {
+      if (item.iconsExist === false) setTransferIconsDisabled(false)
+    })
 
     // temporarily disabled, because move icons does not work
-    setTransferIconsDisabled(true)
+    // setTransferIconsDisabled(false)
   }
 
   return (
@@ -80,7 +80,7 @@ const GameCodesForm = () => {
             disabled={transferIconsDisabled}
             onClick={transferIconsHandler}
           >
-            TBD
+            Transfer Icons
           </button>
         </div>
       </form>

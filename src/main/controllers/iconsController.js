@@ -3,6 +3,8 @@ import path from 'path'
 import { BASE_PATH, JSON_PATH, MATERIALS_PATH } from '../utils/pathUtils'
 import { readJSONFile } from '../utils/generalPurposeFunctions'
 import { shell, nativeImage } from 'electron'
+import { gameProviders } from '../../renderer/src/components/GameCodes/gameProviders'
+import specialGameProviders from '../specialGameProviders'
 
 const unzipper = require('unzipper')
 
@@ -42,19 +44,91 @@ const createFolderLinks = async () => {
 
 const transferIcons = async () => {
   // gather all folders that should have icons and simplify names to lowercase without the GP part
-  const newUploadFolders = fs.readdirSync(BASE_PATH)
-  const lowerCaseFolderNames = newUploadFolders
-    .map((folderName) => {
-      if (folderName.includes('_')) return folderName.split('_')
-    })
-    .filter(Boolean)
-    .map((folder) => folder.slice(1).join('').toLowerCase())
+  const newUploadFolders = await fs.promises.readdir(BASE_PATH)
+  const folderMapping = createFolderMapping(newUploadFolders)
 
   // find all maps on desktop/materials path
   const iconFolders = fs.readdirSync(MATERIALS_PATH)
   const parentZipFiles = iconFolders.filter((file) => file.includes('ORYX'))
+  await unzipParentFiles(parentZipFiles)
 
-  // Unzip parent zip files (ORYX-12345)
+  const providerPrefixes = []
+  for (const key in gameProviders) {
+    providerPrefixes.push(gameProviders[key])
+  }
+
+  const normalizeGameNameFromParts = (parts) => {
+    return parts
+      .flatMap((part) => part.split('.'))
+      .slice(0, -1)
+      .join('')
+      .toLowerCase()
+      .replace(/[^\w\s]/g, '')
+      .trim()
+  }
+
+  // attempt to extract materials to upload folders
+  for (const file of iconFolders) {
+    const filePath = path.join(MATERIALS_PATH, file)
+    // If zip file has spaces, replace with underscore for consistency
+    const normalizedFile = file.replace(/\s+/g, '_')
+    const parts = normalizedFile.split('_')
+
+    if (
+      (parts.length >= 1 && providerPrefixes.includes(parts[0])) ||
+      specialGameProviders.includes(parts[0])
+    ) {
+      parts.shift()
+    }
+
+    const gameNameFromParts = normalizeGameNameFromParts(parts)
+
+    const destinationFolder = folderMapping.get(gameNameFromParts)
+    if (!destinationFolder) continue
+
+    const destinationPath = path.join(BASE_PATH, destinationFolder, 'launch')
+
+    // Ensure the destination folder exists, ignore json
+    if (destinationPath.includes('.json')) continue
+
+    if (!fs.existsSync(destinationPath)) console.log(`Folder ${destinationFolder} not found`)
+    if (!fs.existsSync(destinationFolder))
+      console.log(`Folder ${destinationFolder} already has icons`)
+
+    if (fs.lstatSync(filePath).isFile() && path.extname(file) === '.zip') {
+      await fs
+        .createReadStream(filePath)
+        .pipe(unzipper.Parse())
+        .on('entry', async (entry) => {
+          const fileName = path.basename(entry.path)
+          const fileExtension = path.extname(fileName).toLowerCase()
+          if (fileExtension === '.png' && !fileName.startsWith('._')) {
+            const writeStream = fs.createWriteStream(path.join(destinationPath, fileName))
+            entry.pipe(writeStream)
+            await new Promise((resolve) => writeStream.on('finish', resolve))
+          } else {
+            entry.autodrain()
+          }
+        })
+        .promise()
+    }
+  }
+}
+
+const createFolderMapping = (folders) => {
+  const mapping = new Map()
+
+  folders.forEach((folderName) => {
+    if (!folderName.includes('_')) return
+
+    const [prefix, ...rest] = folderName.split('_')
+    const normalizedName = rest.join('').toLowerCase()
+    mapping.set(normalizedName, folderName)
+  })
+  return mapping
+}
+
+const unzipParentFiles = async (parentZipFiles) => {
   for (const file of parentZipFiles) {
     const filePath = path.join(MATERIALS_PATH, file)
 
@@ -66,47 +140,6 @@ const transferIcons = async () => {
       console.log(`Unzipped successfully, parent file deleted: ${file}`)
       // Delete the zip file after successful unzip
       fs.unlinkSync(filePath)
-    }
-  }
-
-  // attempt to extract materials to upload folders
-  for (const file of iconFolders) {
-    const filePath = path.join(MATERIALS_PATH, file)
-    const zipFileName = file
-      .split('_')
-      .flatMap((part) => part.split('.'))
-      .slice(0, -1)
-      .join('')
-      .toLowerCase()
-
-    if (lowerCaseFolderNames.includes(zipFileName)) {
-      const destinationFolder = newUploadFolders[lowerCaseFolderNames.indexOf(zipFileName)]
-      const destinationPath = path.join(BASE_PATH, destinationFolder, 'launch')
-
-      // Ensure the destination folder exists, ignore json
-      if (destinationPath.includes('.json')) continue
-
-      if (!fs.existsSync(destinationPath)) console.log(`Folder ${destinationFolder} not found`)
-      if (!fs.existsSync(destinationFolder))
-        console.log(`Folder ${destinationFolder} already has icons`)
-
-      if (fs.lstatSync(filePath).isFile() && path.extname(file) === '.zip') {
-        await fs
-          .createReadStream(filePath)
-          .pipe(unzipper.Parse())
-          .on('entry', async (entry) => {
-            const fileName = path.basename(entry.path)
-            const fileExtension = path.extname(fileName).toLowerCase()
-            if (fileExtension === '.png' && !fileName.startsWith('._')) {
-              const writeStream = fs.createWriteStream(path.join(destinationPath, fileName))
-              entry.pipe(writeStream)
-              await new Promise((resolve) => writeStream.on('finish', resolve))
-            } else {
-              entry.autodrain()
-            }
-          })
-          .promise()
-      }
     }
   }
 }
