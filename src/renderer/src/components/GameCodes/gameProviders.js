@@ -44,6 +44,7 @@ const gameProviders = {
   NoLimitCity: 'NLC',
   OneTouch: 'ONT',
   Ortiz: 'ORTIZ',
+  Platipus: 'PTP',
   Playngo: 'PNG',
   Playson: 'PLS',
   'Pragmatic Play': 'PP',
