@@ -34,6 +34,11 @@ function Sidebar() {
           Task Helper
         </NavLink>
       </li> */}
+      <li>
+        <NavLink className="navbar__item" to="reconAsistant">
+          Recon Assistant
+        </NavLink>
+      </li>
     </ul>
   )
 }

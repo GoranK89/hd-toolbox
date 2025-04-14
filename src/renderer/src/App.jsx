@@ -7,6 +7,7 @@ import Games from './components/Games/Games'
 import GameCodes from './components/GameCodes/GameCodes'
 import TaskHelper from './components/TaskHelper/TaskHelper'
 import Dashboard from './components/Dashboard/Dashboard'
+import ReconAsistant from './components/ReconAsistant/ReconAsistant'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,6 +30,7 @@ function App() {
             <Route path="games" element={<Games />} />
             <Route path="gameCodes" element={<GameCodes />} />
             <Route path="taskHelper" element={<TaskHelper />} />
+            <Route path="reconAsistant" element={<ReconAsistant />} />
           </Route>
         </Routes>
       </HashRouter>

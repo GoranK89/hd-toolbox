@@ -42,6 +42,7 @@ const gameProviders = {
   Microgaming: 'MGS',
   Netent: 'NETEE',
   NoLimitCity: 'NLC',
+  Octoplay: 'OP',
   OneTouch: 'ONT',
   Ortiz: 'ORTIZ',
   Platipus: 'PTP',

@@ -26,6 +26,9 @@ const api = {
   },
   refreshIconStatus: () => {
     return ipcRenderer.invoke('refreshIconStatus')
+  },
+  reconFormatSheet: () => {
+    return ipcRenderer.invoke('reconFormatSheet')
   }
 }
 

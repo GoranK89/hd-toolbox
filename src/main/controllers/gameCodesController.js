@@ -82,7 +82,7 @@ const processGameCode = (newGameCode, existingGameCodes) => {
       id: newGameCode,
       name: noGpNoRTPGameCodeFormated,
       provider: gameProvider,
-      type: 'SLOT',
+      type: determineGameType(newGameCode),
       similarGames: [],
       iconsExist: false,
       folderLink: `games[]=${gameProvider}/${newGameCode}`,
@@ -92,6 +92,30 @@ const processGameCode = (newGameCode, existingGameCodes) => {
     throw new Error(`Duplicate game code: ${newGameCode}`)
   }
   return existingGameCodes
+}
+
+function determineGameType(gameCodes) {
+  const cardType = ['BLACKJACK', 'BACCARAT', 'CARD', 'BLACK JACK', 'POKER', 'BJ']
+  const tableType = [
+    'ROULETE',
+    'RULETE',
+    'RULETA',
+    'ROLETA',
+    'RULETKA',
+    'SIC BO',
+    'BAC BO',
+    'FIRST PERSON',
+    'KENO'
+  ]
+
+  if (cardType.some((keyword) => gameCodes.includes(keyword))) {
+    return 'CARD'
+  }
+  if (tableType.some((keyword) => gameCodes.includes(keyword))) {
+    return 'TABLE'
+  }
+
+  return 'SLOT'
 }
 
 async function storeGameCodes(gameCodes) {

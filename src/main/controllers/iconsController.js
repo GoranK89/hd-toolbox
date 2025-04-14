@@ -43,19 +43,16 @@ const createFolderLinks = async () => {
 }
 
 const transferIcons = async () => {
+  const providerPrefixes = Object.values(gameProviders)
+
   // gather all folders that should have icons and simplify names to lowercase without the GP part
   const newUploadFolders = await fs.promises.readdir(BASE_PATH)
-  const folderMapping = createFolderMapping(newUploadFolders)
+  const folderMapping = createFolderMapping(newUploadFolders, providerPrefixes)
 
   // find all maps on desktop/materials path
   const iconFolders = fs.readdirSync(MATERIALS_PATH)
   const parentZipFiles = iconFolders.filter((file) => file.includes('ORYX'))
   await unzipParentFiles(parentZipFiles)
-
-  const providerPrefixes = []
-  for (const key in gameProviders) {
-    providerPrefixes.push(gameProviders[key])
-  }
 
   const normalizeGameNameFromParts = (parts) => {
     return parts
@@ -63,6 +60,7 @@ const transferIcons = async () => {
       .slice(0, -1)
       .join('')
       .toLowerCase()
+      .replace(/&/g, 'and')
       .replace(/[^\w\s]/g, '')
       .trim()
   }
@@ -79,6 +77,11 @@ const transferIcons = async () => {
       specialGameProviders.includes(parts[0])
     ) {
       parts.shift()
+    }
+
+    // handle MGS versioning
+    if (parts[parts.length - 1].includes('V')) {
+      parts.pop()
     }
 
     const gameNameFromParts = normalizeGameNameFromParts(parts)
@@ -122,7 +125,25 @@ const createFolderMapping = (folders) => {
     if (!folderName.includes('_')) return
 
     const [prefix, ...rest] = folderName.split('_')
-    const normalizedName = rest.join('').toLowerCase()
+
+    // Check if the last item is a number between 85 and 99
+    let partsToUse = [...rest] // Create a copy of rest array
+
+    if (rest.length > 0) {
+      const lastPart = rest[rest.length - 1]
+
+      // Extract the last 2 characters if the string is long enough
+      const lastTwoChars = lastPart.length >= 2 ? lastPart.slice(-2) : lastPart
+      const num = parseInt(lastTwoChars)
+
+      // If the last part is a number between 85 and 99, remove it
+      if (!isNaN(num) && num >= 85 && num <= 99) {
+        partsToUse = rest.slice(0, -1) // Remove the last element
+        console.log(`Removed numeric suffix '${lastPart}' from '${folderName}'`)
+      }
+    }
+
+    const normalizedName = partsToUse.join('').toLowerCase()
     mapping.set(normalizedName, folderName)
   })
   return mapping
