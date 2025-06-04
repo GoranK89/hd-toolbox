@@ -5,7 +5,7 @@ function extractRTP(gameCode) {
   let lastPart = gameCode[gameCode.length - 1]
   let lastTwoChars = lastPart.slice(-2)
   Number(lastTwoChars)
-  if (lastTwoChars >= 85 && lastTwoChars <= 99) {
+  if (lastTwoChars >= 84 && lastTwoChars <= 99) {
     return lastTwoChars
   }
 }
@@ -18,11 +18,11 @@ async function ensureUploadFolderExists(path) {
   }
 }
 
-function handleSpecialGameProviders(gameProvider) {
+function normalizeSpecialGameProviders(gameProvider) {
   // NOTE: so far mobile game codes all work like this, and no regular GP ends with M
   // Remove the last letter from the game provider if it is 'M' or 'D' - needs retinking, how to store special cases
   const gameProviderLastLetter = gameProvider[gameProvider.length - 1]
-  if (gameProviderLastLetter === 'M') {
+  if (gameProviderLastLetter === 'M' && gameProvider !== 'TOM') {
     gameProvider = gameProvider.slice(0, -1)
     // the very special cases are handled bellow
   } else if (gameProvider === 'MGSD') {
@@ -65,5 +65,5 @@ export {
   ensureUploadFolderExists,
   readJSONFile,
   writeJSONFile,
-  handleSpecialGameProviders
+  normalizeSpecialGameProviders
 }

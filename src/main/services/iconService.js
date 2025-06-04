@@ -8,6 +8,9 @@ import specialGameProviders from '../specialGameProviders'
 
 const unzipper = require('unzipper')
 
+/////////////////////////////
+/* GAMES AND SYMLINKS */
+//////////////////////////////
 const createFolderLinks = async () => {
   // Create the icons.txt file if it doesn't exist
   if (!fs.existsSync(`${BASE_PATH}/icons.txt`)) fs.writeFileSync(`${BASE_PATH}/icons.txt`, '')
@@ -42,12 +45,15 @@ const createFolderLinks = async () => {
   fs.writeFileSync(`${BASE_PATH}/icons.txt`, fileContent)
 }
 
+//////////////////////////////
+/* MATCH AND TRANSFER ICONS */
+//////////////////////////////
 const transferIcons = async () => {
-  const providerPrefixes = Object.values(gameProviders)
+  const gameProviderShortcodes = Object.values(gameProviders)
 
   // gather all folders that should have icons and simplify names to lowercase without the GP part
   const newUploadFolders = await fs.promises.readdir(BASE_PATH)
-  const folderMapping = createFolderMapping(newUploadFolders, providerPrefixes)
+  const folderMapping = createFolderMapping(newUploadFolders, gameProviderShortcodes)
 
   // find all maps on desktop/materials path
   const iconFolders = fs.readdirSync(MATERIALS_PATH)
@@ -73,14 +79,17 @@ const transferIcons = async () => {
     const parts = normalizedFile.split('_')
 
     if (
-      (parts.length >= 1 && providerPrefixes.includes(parts[0])) ||
+      (parts.length >= 1 && gameProviderShortcodes.includes(parts[0])) ||
       specialGameProviders.includes(parts[0])
     ) {
       parts.shift()
     }
 
     // handle MGS versioning
-    if (parts[parts.length - 1].includes('V')) {
+    const lastPart = parts[parts.length - 1].split('.').shift()
+    const rtp = Number(lastPart.slice(1, 3))
+
+    if (parts[parts.length - 1].includes('V') && !isNaN(rtp)) {
       parts.pop()
     }
 
@@ -118,7 +127,7 @@ const transferIcons = async () => {
   }
 }
 
-const createFolderMapping = (folders) => {
+const createFolderMapping = (folders, gameProviderShortcodes) => {
   const mapping = new Map()
 
   folders.forEach((folderName) => {
@@ -127,7 +136,13 @@ const createFolderMapping = (folders) => {
     const [prefix, ...rest] = folderName.split('_')
 
     // Check if the last item is a number between 85 and 99
-    let partsToUse = [...rest] // Create a copy of rest array
+    let partsToUse = [...rest] // Create a copy of the rest of array
+    if (gameProviderShortcodes && gameProviderShortcodes.includes(prefix)) {
+      // Provider prefix already removed
+    } else {
+      // If prefix is not a provider, include it in the name
+      partsToUse = [prefix, ...rest]
+    }
 
     if (rest.length > 0) {
       const lastPart = rest[rest.length - 1]
