@@ -4,6 +4,7 @@
   "description": "Desktop app for faster 3rd party games preparation",
   "main": "./out/main/index.js",
   "author": "Goran Kolar",
+  "email": "your@email.com",
   "license": "ISC",
   "homepage": "https://github.com/GoranK89/hd-toolbox",
   "scripts": {
@@ -15,7 +16,7 @@
     "postinstall": "electron-builder install-app-deps",
     "build:win": "npm run build && electron-builder --win --config=build/win.json",
     "build:mac": "npm run build && electron-builder --mac --config=build/mac.json",
-    "build:linux": "npm run build && electron-builder --linux --config=build/linux.json"
+    "build:linux": "npm run build && electron-builder --linux"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^2.0.0",
@@ -37,23 +38,24 @@
     "electron-vite": "^1.0.27",
     "eslint": "^8.47.0",
     "eslint-plugin-react": "^7.33.2",
-    "node-sass": "^9.0.0",
     "prettier": "^3.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "sass": "^1.97.3",
     "vite": "^4.4.9"
   },
   "build": {
     "appId": "com.hdtoolbox.app",
     "productName": "HdToolbox",
     "files": [
-      "dist/**/*",
+      "out/**/*",
       "node_modules/**/*",
       "src/renderer/src/assets/**/*",
       "package.json"
     ],
     "directories": {
-      "buildResources": "build"
+      "buildResources": "build",
+      "output": "dist"
     },
     "win": {
       "target": "nsis"
@@ -75,7 +77,8 @@
         "AppImage",
         "deb"
       ],
-      "category": "Utility"
+      "category": "Utility",
+      "maintainer": "Goran Kolar <your@email.com>"
     }
   }
 }

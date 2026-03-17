@@ -28,7 +28,7 @@ export function setupGameHandlers() {
   ipcMain.handle('readGameCodes', async (event) => {
     try {
       if (!fs.existsSync(JSON_PATH)) {
-        return { success: true, data: [] }
+        return []
       }
       const json = await readJSONFile(JSON_PATH)
       return json

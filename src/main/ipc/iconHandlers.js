@@ -6,7 +6,8 @@ import {
   transferIcons,
   getImagePaths,
   checkGameIcons,
-  checkIconsInBrowser
+  checkIconsInBrowser,
+  checkIconsHttps
 } from '../services/iconService.js'
 
 export function setupIconHandlers() {
@@ -29,6 +30,15 @@ export function setupIconHandlers() {
       await checkIconsInBrowser()
     } catch (error) {
       console.error('Error in openIconUrls:', error)
+    }
+  })
+  
+  // Check icons via HTTPS response
+  ipcMain.handle('checkIconsHttps', async () => {
+    try {
+      await checkIconsHttps()
+    } catch (error) {
+      console.error('Error in iconsHttpsCheck:', error)
     }
   })
 

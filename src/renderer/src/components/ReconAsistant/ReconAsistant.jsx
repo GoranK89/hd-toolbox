@@ -11,7 +11,6 @@ const ReconAsistant = () => {
     <div className="recon-assistant-container">
       <header className="recon-header">
         <h1>Recon Manager</h1>
-        <p>Streamline your monthly reconciliation tasks.</p>
       </header>
       <button onClick={handleClick}>Do something</button>
     </div>

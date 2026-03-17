@@ -51,6 +51,7 @@ export function useGames() {
     deleteFolder: deleteFolder.mutate,
     editGameInfo: (id, editedValues) => editGameInfo.mutate({ id, editedValues }),
     checkIconsInBrowser: gamesApi.checkIconsInBrowser,
+    checkIconsHttps: gamesApi.checkIconsHttps,
     transferIcons: gamesApi.transferIcons,
     getImagePaths: gamesApi.getImagePaths
   }

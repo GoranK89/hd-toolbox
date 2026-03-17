@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import https from 'https'
 import { BASE_PATH, JSON_PATH, MATERIALS_PATH } from '../utils/pathUtils'
 import { readJSONFile } from '../utils/generalPurposeFunctions'
 import { shell, nativeImage } from 'electron'
@@ -194,7 +195,8 @@ const checkGameIcons = (folderName) => {
 }
 
 const checkIconsInBrowser = async () => {
-  if (!fs.existsSync) return
+  if (!fs.existsSync(JSON_PATH)) return
+
   const gameCodes = await readJSONFile(JSON_PATH)
   const iconUrls = gameCodes.flatMap((gameCode) => [
     `https://cdn.oryxgaming.com/medialib/${gameCode.id}/launch/250x157.png`,
@@ -203,9 +205,46 @@ const checkIconsInBrowser = async () => {
     )
   ])
 
+  // opens each icon in browser
   iconUrls.forEach((url) => {
     shell.openExternal(url)
   })
+
+}
+
+const checkIconsHttps = async () => {
+  if (!fs.existsSync(JSON_PATH)) return
+
+  const gameCodes = await readJSONFile(JSON_PATH)
+  const iconUrls = gameCodes.flatMap((gameCode) => [
+    `https://cdn.oryxgaming.com/medialib/${gameCode.id}/launch/250x157.png`,
+    ...gameCode.similarGames.map(
+      (similarGame) => `https://cdn.oryxgaming.com/medialib/${similarGame}/launch/250x157.png`
+    )
+  ])
+
+  const checkUrl = async (url) => {
+    try {
+      const res = await fetch(url, { method: 'HEAD' })
+      return { url, status: res.status, ok: res.ok }
+    } catch {
+      return { url, status: 0, ok: false }
+    }
+  }
+
+  // Run in batches to avoid overwhelming network
+  const BATCH_SIZE = 10
+  const missing = []
+
+  for (let i = 0; i < iconUrls.length; i += BATCH_SIZE) {
+    const batch = iconUrls.slice(i, i + BATCH_SIZE)
+    const results = await Promise.all(batch.map((url) => checkUrl(url)))
+    console.log(results)
+    results.filter((r) => !r.ok).forEach((r) => missing.push(r.url))
+  }
+
+  // console.log(`Missing icons (${missing.length}):`, missing)
+  return missing
 }
 
 // send image paths to frontend
@@ -232,4 +271,4 @@ const getImagePaths = () => {
   return imagePaths
 }
 
-export { createFolderLinks, checkGameIcons, transferIcons, getImagePaths, checkIconsInBrowser }
+export { createFolderLinks, checkGameIcons, transferIcons, getImagePaths, checkIconsInBrowser, checkIconsHttps }

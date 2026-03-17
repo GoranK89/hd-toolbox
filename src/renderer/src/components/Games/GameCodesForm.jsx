@@ -5,7 +5,7 @@ const GameCodesForm = () => {
   const [gameCodes, setGameCodes] = useState('')
   const [transferIconsDisabled, setTransferIconsDisabled] = useState(true)
 
-  const { folders, storeGameCodes, checkIconsInBrowser, transferIcons } = useGames()
+  const { folders, storeGameCodes, checkIconsInBrowser, checkIconsHttps, transferIcons } = useGames()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -27,8 +27,14 @@ const GameCodesForm = () => {
     }
   }
 
-  function checkCdnHandler() {
-    checkIconsInBrowser()
+   async function checkCdnHandler() {
+    const res = await checkIconsInBrowser()
+    console.log("GameCodesForm log: " + res)
+  }
+
+   async function checkIconsHttpHandler() {
+    const res = await checkIconsHttps()
+    console.log("GameCodesForm log: " + res)
   }
 
   function transferIconsHandler() {
@@ -86,6 +92,9 @@ const GameCodesForm = () => {
       </form>
       <button className="button button--large button--tertiary" onClick={checkCdnHandler}>
         Check CDN
+      </button>
+      <button className="button button--large button--tertiary" onClick={checkIconsHttpHandler}>
+        Check Icons - HTTPS
       </button>
     </div>
   )

@@ -15,6 +15,9 @@ const api = {
   openIconUrls: () => {
     return ipcRenderer.invoke('openIconUrls')
   },
+  checkIconsHttps: () => {
+    return ipcRenderer.invoke('checkIconsHttps')
+  },
   editGameInfo: (id, editedValues) => {
     return ipcRenderer.invoke('editGameInfo', id, editedValues)
   },

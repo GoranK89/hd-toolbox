@@ -27,6 +27,9 @@ export const gamesApi = {
   checkIconsInBrowser: async () => {
     return await window.api.openIconUrls()
   },
+  checkIconsHttps: async () => {
+    return await window.api.checkIconsHttps()
+  },
   transferIcons: async () => {
     return await window.api.transferIcons()
   },
