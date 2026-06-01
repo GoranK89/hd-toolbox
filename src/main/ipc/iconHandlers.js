@@ -32,11 +32,11 @@ export function setupIconHandlers() {
       console.error('Error in openIconUrls:', error)
     }
   })
-  
+
   // Check icons via HTTPS response
   ipcMain.handle('checkIconsHttps', async () => {
     try {
-      await checkIconsHttps()
+      return await checkIconsHttps()
     } catch (error) {
       console.error('Error in iconsHttpsCheck:', error)
     }

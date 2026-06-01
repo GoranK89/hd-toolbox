@@ -209,18 +209,23 @@ const checkIconsInBrowser = async () => {
   iconUrls.forEach((url) => {
     shell.openExternal(url)
   })
-
 }
 
 const checkIconsHttps = async () => {
   if (!fs.existsSync(JSON_PATH)) return
 
   const gameCodes = await readJSONFile(JSON_PATH)
-  const iconUrls = gameCodes.flatMap((gameCode) => [
-    `https://cdn.oryxgaming.com/medialib/${gameCode.id}/launch/250x157.png`,
-    ...gameCode.similarGames.map(
-      (similarGame) => `https://cdn.oryxgaming.com/medialib/${similarGame}/launch/250x157.png`
-    )
+  const iconUrlEntries = gameCodes.flatMap((gameCode) => [
+    {
+      url: `https://cdn.oryxgaming.com/medialib/${gameCode.id}/launch/250x157.png`,
+      gameCode: gameCode.id,
+      source: 'main'
+    },
+    ...gameCode.similarGames.map((similarGame) => ({
+      url: `https://cdn.oryxgaming.com/medialib/${similarGame}/launch/250x157.png`,
+      gameCode: gameCode.id,
+      source: similarGame
+    }))
   ])
 
   const checkUrl = async (url) => {
@@ -236,14 +241,17 @@ const checkIconsHttps = async () => {
   const BATCH_SIZE = 10
   const missing = []
 
-  for (let i = 0; i < iconUrls.length; i += BATCH_SIZE) {
-    const batch = iconUrls.slice(i, i + BATCH_SIZE)
-    const results = await Promise.all(batch.map((url) => checkUrl(url)))
-    console.log(results)
-    results.filter((r) => !r.ok).forEach((r) => missing.push(r.url))
+  for (let i = 0; i < iconUrlEntries.length; i += BATCH_SIZE) {
+    const batch = iconUrlEntries.slice(i, i + BATCH_SIZE)
+    const results = await Promise.all(
+      batch.map(async (entry) => {
+        const res = await checkUrl(entry.url)
+        return { ...res, gameCode: entry.gameCode, source: entry.source }
+      })
+    )
+    results.filter((r) => !r.ok).forEach((r) => missing.push(r))
   }
 
-  // console.log(`Missing icons (${missing.length}):`, missing)
   return missing
 }
 
@@ -271,4 +279,11 @@ const getImagePaths = () => {
   return imagePaths
 }
 
-export { createFolderLinks, checkGameIcons, transferIcons, getImagePaths, checkIconsInBrowser, checkIconsHttps }
+export {
+  createFolderLinks,
+  checkGameIcons,
+  transferIcons,
+  getImagePaths,
+  checkIconsInBrowser,
+  checkIconsHttps
+}

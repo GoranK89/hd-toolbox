@@ -4,8 +4,10 @@ import { useGames } from '../../hooks/useGames'
 const GameCodesForm = () => {
   const [gameCodes, setGameCodes] = useState('')
   const [transferIconsDisabled, setTransferIconsDisabled] = useState(true)
+  const [iconsHTTPS, setIconsHTTPS] = useState([])
 
-  const { folders, storeGameCodes, checkIconsInBrowser, checkIconsHttps, transferIcons } = useGames()
+  const { folders, storeGameCodes, checkIconsInBrowser, checkIconsHttps, transferIcons } =
+    useGames()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -27,14 +29,15 @@ const GameCodesForm = () => {
     }
   }
 
-   async function checkCdnHandler() {
+  async function checkCdnHandler() {
     const res = await checkIconsInBrowser()
-    console.log("GameCodesForm log: " + res)
+    console.log('GameCodesForm log: ' + res)
   }
 
-   async function checkIconsHttpHandler() {
+  async function checkIconsHttpHandler() {
     const res = await checkIconsHttps()
-    console.log("GameCodesForm log: " + res)
+    setIconsHTTPS(res)
+    // console.log('GameCodesForm log: ', res)
   }
 
   function transferIconsHandler() {
@@ -90,6 +93,11 @@ const GameCodesForm = () => {
           </button>
         </div>
       </form>
+      <ul>
+        {iconsHTTPS?.map((icon, i) => (
+          <li key={i}>{icon.gameCode}</li>
+        ))}
+      </ul>
       <button className="button button--large button--tertiary" onClick={checkCdnHandler}>
         Check CDN
       </button>
